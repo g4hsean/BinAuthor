@@ -2,6 +2,8 @@ from idautils import *
 from idaapi import *
 from idaapi import PluginForm
 from pymongo import MongoClient
+import random
+from itertools import cycle, islice
 
 import numpy as np
 import matplotlib
@@ -13,6 +15,8 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 from PySide import QtGui, QtCore
+import BinAuthorPlugin.Algorithms.FunctionStatistics as InstructionGroupStatistics
+
 class StatsView(PluginForm):
     def setDetails(self,funcName):
         self.client = MongoClient('localhost', 27017)
@@ -23,7 +27,8 @@ class StatsView(PluginForm):
         self.groupStats = {}
         self.maxFreq = 0
         self.minFreq = sys.maxint
-		
+        self.FunctionName = funcName
+        self.CurrentMD5 = str(GetInputFileMD5())
 		
         for item in self.legendItems:
             if item["group"] not in self.legend.keys():
@@ -72,8 +77,26 @@ class StatsView(PluginForm):
         #f1.set_facecolor(None)
         #f1.patch.set_alpha(0.0)
         temp = f1.add_subplot(111)
+        my_colors = list(islice(cycle(['b', 'r', 'g', 'y', 'k']), None, len(D)))
+        temp.bar(range(len(D)), D.values(), align='center', width=0.2,color=my_colors)
+
+        canvas2 = FigureCanvas(f1)
+        canvas2.setMinimumWidth(150)
+        canvas2.setMinimumHeight(150)
+        return canvas2
         
-        temp.bar(range(len(D)), D.values(), align='center', width=0.2)
+    def createBarChartA(self,dataDict):
+               
+        f1 = plt.figure(figsize=(1.5625,0.2))
+        #f1.set_facecolor(None)
+        #f1.patch.set_alpha(0.0)
+        temp = f1.add_subplot(111)
+        
+        my_colors = list(islice(cycle(['b', 'r', 'g', 'y', 'k']), None, len(dataDict)))
+        
+        temp.bar(range(len(dataDict)), dataDict.values(), align='center', width=0.2,color=my_colors)
+        temp.set_xticks(range(len(dataDict)))
+        temp.set_xticklabels(dataDict.keys())
 
         canvas2 = FigureCanvas(f1)
         canvas2.setMinimumWidth(150)
@@ -102,6 +125,10 @@ class StatsView(PluginForm):
     def OnCreate(self, Form):
         self.parent = self.FormToPySideWidget(Form)
         
+        self.FunctionStats = InstructionGroupStatistics.InstructionGroupStatistics(self.CurrentMD5,self.FunctionName)
+        
+        skewness = self.FunctionStats.getSkewness()
+        kurtosis = self.FunctionStats.getKurtosis()
         
         self.widget1 = QtGui.QWidget()
         self.widget2 = QtGui.QWidget()
@@ -128,7 +155,7 @@ class StatsView(PluginForm):
         self.column1.addWidget(self.listView,QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
          
         self.column2 = QtGui.QVBoxLayout()
-        self.column2.addWidget(self.createBarChart())
+        self.column2.addWidget(self.createBarChartA({u'Skewness':skewness, u'Kurtosis': kurtosis}))
         self.column2.addWidget(self.createBarChart())
         self.column2.addWidget(self.createBarChart())
         
