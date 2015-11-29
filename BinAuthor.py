@@ -25,6 +25,7 @@ from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as Naviga
 from PySide import QtGui, QtCore
 import BinAuthorPlugin.Views.StatisticsView as StatsView
 import BinAuthorPlugin.Algorithms.CategorizeFunction as FunctionCategorizer
+import pluginConfigurations
 
 class FeatureExtractor():
     def __init__(self):
@@ -32,8 +33,8 @@ class FeatureExtractor():
         self.db = self.client.BinAuthor
         self.collection = self.db.Functions
 
-        self.instructionList = r"C:\Users\titan\Desktop\Saed\InstructionList.txt"
-        self.groupList = r"C:\Users\titan\Desktop\Saed\InstructionGroups.txt"
+        self.instructionList = pluginConfigurations.getInstructionListPath() + "InstructionList.txt"
+        self.groupList = pluginConfigurations.getGroupPath() + "InstructionGroups.txt"
 
         self.instructions = {}
         self.groups = {}

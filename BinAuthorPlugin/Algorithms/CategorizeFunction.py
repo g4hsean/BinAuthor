@@ -12,7 +12,7 @@ import idc
 from idaapi import plugin_t
 from pprint import pprint
 from idaapi import PluginForm
-
+import pluginConfigurations
 
 class FunctionCategorizer():
     def __init__(self):
@@ -23,10 +23,9 @@ class FunctionCategorizer():
 
         self.instructionFeatures = {}
         self.groupFeatures = {}
-
         self.compilerInstructionFeatures = {}
         self.compilerGroupFeatures = {}
-        self.rootFolder = "C:\\Users\\titan\\Desktop\\Saed\\"
+        self.rootFolder = pluginConfigurations.getRoot()
         self.thresholdPath = "With_Threshold\\"
         self.outputResults = {}
         self.outputResultsOnlyMatch = {}
