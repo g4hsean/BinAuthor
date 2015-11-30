@@ -91,7 +91,7 @@ class StatsView(PluginForm):
         temp.bar(range(len(dataDict)), dataDict.values(), align='center', width=0.2,color=my_colors)
         temp.set_xticks(range(len(dataDict)))
         temp.set_xticklabels(dataDict.keys())
-        plt.setp(temp.get_xticklabels(), rotation=30, horizontalalignment='right')
+        plt.setp(temp.get_xticklabels(), rotation=20, horizontalalignment='right')
         canvas2 = FigureCanvas(f1)
         plt.gcf().subplots_adjust(bottom=0.5)
         canvas2.setMinimumWidth(150)
