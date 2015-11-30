@@ -38,31 +38,25 @@ class StatsView(PluginForm):
                     self.maxFreq = int(item["groupCount"])
                 if int(item["groupCount"]) > self.minFreq:
                     self.minFreq = int(item["groupCount"])
-    def createBoxPlot(self):
+    def createBoxPlot(self,dataDict):
 	    # basic plot
         f1 = plt.figure(figsize=(1.5625,0.2))
         #f1.set_facecolor(None)
         #f1.patch.set_alpha(0.0)
         temp = f1.add_subplot(111)
-	
-	    # fake up some more data
         
-        self.groupStats
-		
-        spread = np.random.rand(50) * 100
-        center = np.ones(25) * 40
-        flier_high = [self.maxFreq] * 100 + 100
-        flier_low = [self.minFreq] * -100
-        d2 = np.concatenate((spread, center, flier_high, flier_low), 0)
-        data.shape = (-1, 1)
-        d2.shape = (-1, 1)
-	    # data = concatenate( (data, d2), 1 )
-	    # Making a 2-D array only works if all the columns are the
-	    # same length.  If they are not, then use a list instead.
-	    # This is actually more efficient because boxplot converts
-	    # a 2-D array into a list of vectors internally anyway.
-        data = np.concatenate((spread, center, flier_high, flier_low), 0)
-        temp.boxplot(data)
+        ## Create data
+        np.random.seed(10)
+        collectn_1 = dataDict.values()
+        collectn_2 = np.random.normal(80, 30, 200)
+        collectn_3 = np.random.normal(90, 20, 200)
+        collectn_4 = np.random.normal(70, 25, 200)
+
+        ## combine these different collections into a list    
+        data_to_plot = [collectn_1, collectn_2, collectn_3, collectn_4]
+        
+	    # fake up some more data
+        temp.boxplot(data_to_plot)
 	    # multiple box plots on one figure
         canvas2 = FigureCanvas(f1)
         canvas2.setMinimumWidth(150)
@@ -87,7 +81,7 @@ class StatsView(PluginForm):
         
     def createBarChartA(self,dataDict):
                
-        f1 = plt.figure(figsize=(1.5625,0.2))
+        f1 = plt.figure(figsize=(1.5625,1.5))
         #f1.set_facecolor(None)
         #f1.patch.set_alpha(0.0)
         temp = f1.add_subplot(111)
@@ -97,7 +91,7 @@ class StatsView(PluginForm):
         temp.bar(range(len(dataDict)), dataDict.values(), align='center', width=0.2,color=my_colors)
         temp.set_xticks(range(len(dataDict)))
         temp.set_xticklabels(dataDict.keys())
-
+        plt.setp(temp.get_xticklabels(), rotation=30, horizontalalignment='right')
         canvas2 = FigureCanvas(f1)
         canvas2.setMinimumWidth(150)
         canvas2.setMinimumHeight(150)
@@ -130,8 +124,14 @@ class StatsView(PluginForm):
         skewness = self.FunctionStats.getSkewness()
         kurtosis = self.FunctionStats.getKurtosis()
         
+        mean = self.FunctionStats.getInstructionGroupMeans()
+        variance = self.FunctionStats.getInstructionGroupVariance()
+        print mean
+        print variance
         self.widget1 = QtGui.QWidget()
+        self.widget1.setMinimumWidth((self.parent.frameGeometry().width()-217)/2)
         self.widget2 = QtGui.QWidget()
+        self.widget2.setMinimumWidth((self.parent.frameGeometry().width()-217)/2)
         
         self.listView = QtGui.QTableWidget(len(self.legend.keys()),2)
         self.listView.setMaximumSize(QtCore.QSize(217, 55*len(self.legend.keys())))
@@ -156,13 +156,13 @@ class StatsView(PluginForm):
          
         self.column2 = QtGui.QVBoxLayout()
         self.column2.addWidget(self.createBarChartA({u'Skewness':skewness, u'Kurtosis': kurtosis}))
-        self.column2.addWidget(self.createBarChart())
+        self.column2.addWidget(self.createBarChartA(variance))
         self.column2.addWidget(self.createBarChart())
         
         self.widget1.setLayout(self.column2)
         
         self.column3 = QtGui.QVBoxLayout()
-        self.column3.addWidget(self.createBarChart())
+        self.column3.addWidget(self.createBarChartA(mean))
         self.column3.addWidget(self.createBarChart())
         self.column3.addWidget(self.createBarChart())
         
@@ -190,6 +190,7 @@ class StatsView(PluginForm):
         
         self.mainWindow = QtGui.QWidget()
         self.mainWindow.setLayout(self.row)
+        
         #self.mainWindow.setMinimumHeight(850)
         #self.mainWindow.setMinimumWidth(700)
         self.testLayout = QtGui.QVBoxLayout()
@@ -200,8 +201,20 @@ class StatsView(PluginForm):
         self.finalWindow.addWidget(self.listView,0,0,QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
         self.finalWindow.addLayout(self.testLayout,0,1,QtCore.Qt.AlignTop)
         self.finalWindow.addWidget(self.buttonsWidget,1,1,QtCore.Qt.AlignRight)
-        self.parent.setLayout(self.finalWindow)
         
+        self.finalWindowWidget = QtGui.QWidget()
+        
+        scrollArea = QtGui.QScrollArea()
+        scrollArea.setWidget(self.finalWindowWidget)
+        self.finalWindowWidget.setLayout(self.finalWindow)
+        
+        self.final = QtGui.QVBoxLayout()
+        self.final.addWidget(self.finalWindowWidget)
+        
+        self.parent.setLayout(self.final)
+        #scrollArea = QtGui.QScrollArea()
+        #scrollArea.setBackgroundRole(Qt.Gui.QPalette.Dark)
+        #scrollArea.setWidget(self.mainWindow)
     
     def Show(self):
         """Creates the form is not created or focuses it if it was"""

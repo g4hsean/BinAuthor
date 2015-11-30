@@ -9,10 +9,12 @@ class InstructionGroupStatistics(object):
         self.client = MongoClient('localhost', 27017)
         self.db = self.client.BinAuthor
         self.collection = self.db.Functions
-        self.functionGroupCount = self.collection.find({"function":functionName,"MD5":str(MD5), "group": { "$exists": "true"}},{"group": 1, "groupCount":1,"_id":0})
+        self.functionGroupCount = self.collection.find({"function":functionName,"MD5":str(MD5), "group": { "$exists": "true"}},{"group": 1, "groupCount":1,"_id":0,"mean":1,"variance":1})
         self.groupCounts = []
+        self.groupList = []
         
         for item in self.functionGroupCount:
+            self.groupList.append(item)
             self.groupCounts.append(int(item["groupCount"]))
             
     def getSkewness(self):    
@@ -21,3 +23,20 @@ class InstructionGroupStatistics(object):
     def getKurtosis(self):
         return stats.kurtosis(self.groupCounts)
 
+    def getInstructionGroupMeans(self):
+        meanDict = {}
+        
+        for item in self.groupList:
+            if item["group"] not in meanDict.keys():
+                meanDict[item["group"]] = item["mean"]
+                
+        return meanDict
+        
+    def getInstructionGroupVariance(self):
+        varianceDict = {}
+        print self.groupList
+        for item in self.groupList:
+            if item["group"] not in varianceDict.keys():
+                varianceDict[item["group"]] = item["variance"]
+                
+        return varianceDict
