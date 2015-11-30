@@ -60,7 +60,7 @@ class StatsView(PluginForm):
 	    # multiple box plots on one figure
         canvas2 = FigureCanvas(f1)
         canvas2.setMinimumWidth(150)
-        canvas2.setMinimumHeight(150)
+        canvas2.setMinimumHeight(220)
         return canvas2
 	
     def createBarChart(self):
@@ -76,7 +76,7 @@ class StatsView(PluginForm):
 
         canvas2 = FigureCanvas(f1)
         canvas2.setMinimumWidth(150)
-        canvas2.setMinimumHeight(150)
+        canvas2.setMinimumHeight(220)
         return canvas2
         
     def createBarChartA(self,dataDict):
@@ -93,8 +93,9 @@ class StatsView(PluginForm):
         temp.set_xticklabels(dataDict.keys())
         plt.setp(temp.get_xticklabels(), rotation=30, horizontalalignment='right')
         canvas2 = FigureCanvas(f1)
+        plt.gcf().subplots_adjust(bottom=0.5)
         canvas2.setMinimumWidth(150)
-        canvas2.setMinimumHeight(150)
+        canvas2.setMinimumHeight(220)
         return canvas2
         
            
@@ -113,7 +114,7 @@ class StatsView(PluginForm):
         axes.pie(sizes, explode=explode, labels=labels, colors=colors,autopct='%1.1f%%', shadow=True, startangle=90)
         
         canvas.setMinimumWidth(150)
-        canvas.setMinimumHeight(150)
+        canvas.setMinimumHeight(220)
         return canvas
                 
     def OnCreate(self, Form):
@@ -126,6 +127,10 @@ class StatsView(PluginForm):
         
         mean = self.FunctionStats.getInstructionGroupMeans()
         variance = self.FunctionStats.getInstructionGroupVariance()
+        
+        max = self.FunctionStats.getMaxInstructionFromGroup()
+        min = self.FunctionStats.getMinInstructionFromGroup()
+        
         print mean
         print variance
         self.widget1 = QtGui.QWidget()
@@ -157,13 +162,13 @@ class StatsView(PluginForm):
         self.column2 = QtGui.QVBoxLayout()
         self.column2.addWidget(self.createBarChartA({u'Skewness':skewness, u'Kurtosis': kurtosis}))
         self.column2.addWidget(self.createBarChartA(variance))
-        self.column2.addWidget(self.createBarChart())
+        self.column2.addWidget(self.createBarChartA(max))
         
         self.widget1.setLayout(self.column2)
         
         self.column3 = QtGui.QVBoxLayout()
         self.column3.addWidget(self.createBarChartA(mean))
-        self.column3.addWidget(self.createBarChart())
+        self.column3.addWidget(self.createBarChartA(min))
         self.column3.addWidget(self.createBarChart())
         
         self.button1Widget = QtGui.QWidget()
@@ -206,6 +211,8 @@ class StatsView(PluginForm):
         
         scrollArea = QtGui.QScrollArea()
         scrollArea.setWidget(self.finalWindowWidget)
+        scrollArea.setGeometry(QtCore.QRect(0, 0, (self.parent.frameGeometry().width()-217), self.parent.frameGeometry().height()))
+        scrollArea.setWidgetResizable(True)
         self.finalWindowWidget.setLayout(self.finalWindow)
         
         self.final = QtGui.QVBoxLayout()

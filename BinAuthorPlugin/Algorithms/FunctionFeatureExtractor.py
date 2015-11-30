@@ -14,6 +14,8 @@ from pprint import pprint
 from idaapi import PluginForm
 import pluginConfigurations
 
+import operator
+
 class FeatureExtractor():
     def __init__(self):
         self.client = MongoClient('localhost', 27017)
@@ -68,7 +70,18 @@ class FeatureExtractor():
             if functionGroups[group][1] > 0:
                 hashFunction = hashlib.md5()
                 hashFunction.update(self.fileMD5 + "," + file + "," + "groups," + group + "," + str(functionGroups[group][1]) + "," + str(mean) + "," + str(variance))
-                bulkInsert.append({"binaryFileName":self.fileName,"MD5":self.fileMD5,"Date Analyzed":self.dateAnalyzed,"function":oldFileName,"type":"groups","hash":hashFunction.hexdigest(),"group":group,"groupCount":functionGroups[group][1],"mean":mean,"variance":variance})
+                maxInstruction = max(functionGroups[group][0].iteritems(), key=operator.itemgetter(1))                
+                maxInstructionCount = maxInstruction[1]
+                maxInstruction = maxInstruction[0]
+                
+                for item in functionGroups[group][0].keys():
+                    if functionGroups[group][0][item] == 0:
+                        del functionGroups[group][0][item]
+                minInstruction = min(functionGroups[group][0].iteritems(), key=operator.itemgetter(1))
+                minInstructionCount = minInstruction[1]
+                minInstruction = minInstruction[0]
+                
+                bulkInsert.append({"binaryFileName":self.fileName,"MD5":self.fileMD5,"Date Analyzed":self.dateAnalyzed,"function":oldFileName,"type":"groups","hash":hashFunction.hexdigest(),"group":group,"groupCount":functionGroups[group][1],"mean":mean,"variance":variance,"max_instruction":maxInstruction,"max_instruction_count":maxInstructionCount,"min_instruction":minInstruction,"min_instruction_count":minInstructionCount})
         try:
             self.collection.insert_many(bulkInsert)
         except:
