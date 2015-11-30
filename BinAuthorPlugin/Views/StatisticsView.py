@@ -169,7 +169,7 @@ class StatsView(PluginForm):
         
         self.column3 = QtGui.QVBoxLayout()
         self.column3.addWidget(self.createBarChartA(mean,"Group Mean"))
-        self.column3.addWidget(self.createBarChartA(min,"Instruction With Maximum Frequencies"))
+        self.column3.addWidget(self.createBarChartA(min,"Instruction With Minimum Frequencies"))
         self.column3.addWidget(self.createBarChart())
         
         self.button1Widget = QtGui.QWidget()
