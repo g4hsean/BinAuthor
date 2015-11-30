@@ -79,7 +79,7 @@ class StatsView(PluginForm):
         canvas2.setMinimumHeight(220)
         return canvas2
         
-    def createBarChartA(self,dataDict):
+    def createBarChartA(self,dataDict,title):
                
         f1 = plt.figure(figsize=(1.5625,1.5))
         #f1.set_facecolor(None)
@@ -94,6 +94,7 @@ class StatsView(PluginForm):
         plt.setp(temp.get_xticklabels(), rotation=20, horizontalalignment='right')
         canvas2 = FigureCanvas(f1)
         plt.gcf().subplots_adjust(bottom=0.5)
+        plt.title(title)
         canvas2.setMinimumWidth(150)
         canvas2.setMinimumHeight(220)
         return canvas2
@@ -139,7 +140,7 @@ class StatsView(PluginForm):
         self.widget2.setMinimumWidth((self.parent.frameGeometry().width()-300)/2)
         
         self.listView = QtGui.QTableWidget(len(self.legend.keys()),2)
-        self.listView.setMaximumSize(QtCore.QSize(300, 55*len(self.legend.keys())))
+        self.listView.setMaximumSize(QtCore.QSize(300, 70*len(self.legend.keys())))
         
         newItem = QtGui.QTableWidgetItem("Group Name")
         self.listView.setHorizontalHeaderItem(0, newItem)
@@ -160,15 +161,15 @@ class StatsView(PluginForm):
         self.column1.addWidget(self.listView,QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
          
         self.column2 = QtGui.QVBoxLayout()
-        self.column2.addWidget(self.createBarChartA({u'Skewness':skewness, u'Kurtosis': kurtosis}))
-        self.column2.addWidget(self.createBarChartA(variance))
-        self.column2.addWidget(self.createBarChartA(max))
+        self.column2.addWidget(self.createBarChartA({u'Skewness':skewness, u'Kurtosis': kurtosis},"Function Skewness & Kurtosis"))
+        self.column2.addWidget(self.createBarChartA(variance,"Group Variance"))
+        self.column2.addWidget(self.createBarChartA(max,"Instruction With Maximum Frequencies"))
         
         self.widget1.setLayout(self.column2)
         
         self.column3 = QtGui.QVBoxLayout()
-        self.column3.addWidget(self.createBarChartA(mean))
-        self.column3.addWidget(self.createBarChartA(min))
+        self.column3.addWidget(self.createBarChartA(mean,"Group Mean"))
+        self.column3.addWidget(self.createBarChartA(min,"Instruction With Maximum Frequencies"))
         self.column3.addWidget(self.createBarChart())
         
         self.button1Widget = QtGui.QWidget()
