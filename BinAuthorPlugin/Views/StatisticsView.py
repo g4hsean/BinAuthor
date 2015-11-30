@@ -134,12 +134,12 @@ class StatsView(PluginForm):
         print mean
         print variance
         self.widget1 = QtGui.QWidget()
-        self.widget1.setMinimumWidth((self.parent.frameGeometry().width()-217)/2)
+        self.widget1.setMinimumWidth((self.parent.frameGeometry().width()-300)/2)
         self.widget2 = QtGui.QWidget()
-        self.widget2.setMinimumWidth((self.parent.frameGeometry().width()-217)/2)
+        self.widget2.setMinimumWidth((self.parent.frameGeometry().width()-300)/2)
         
         self.listView = QtGui.QTableWidget(len(self.legend.keys()),2)
-        self.listView.setMaximumSize(QtCore.QSize(217, 55*len(self.legend.keys())))
+        self.listView.setMaximumSize(QtCore.QSize(300, 55*len(self.legend.keys())))
         
         newItem = QtGui.QTableWidgetItem("Group Name")
         self.listView.setHorizontalHeaderItem(0, newItem)
