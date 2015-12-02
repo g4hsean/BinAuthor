@@ -215,6 +215,19 @@ class StatsView(PluginForm):
             self.statsFigures[graph].set_dpi(10)
             self.statsFigures[graph].savefig(dir + graph + ".jpeg")
 
+    def saveFigures(self):
+        dir = idc.AskFile(1,"Skewness.jpeg","Save as")
+        dir = dir[:-len("Skewness.jpeg")]
+        
+        if not os.path.exists(dir + str(idaapi.get_root_filename() + "_" + self.FunctionName[:15])):
+            os.makedirs(dir + str(idaapi.get_root_filename() + "_" + self.FunctionName[:15]))
+        dir = dir + str(idaapi.get_root_filename() + "_" + self.FunctionName[:15]) + "\\"
+        
+        for graph in self.statsFigures.keys():
+            self.statsFigures[graph].set_figheight(2.500)
+            self.statsFigures[graph].set_figwidth(6.000)
+            self.statsFigures[graph].set_dpi(10)
+            self.statsFigures[graph].savefig(dir + graph + ".jpeg")  
             
     def OnCreate(self, Form):
         self.parent = self.FormToPySideWidget(Form)
@@ -327,10 +340,15 @@ class StatsView(PluginForm):
         
         self.buttonsWidget = QtGui.QWidget() #Buttons
         self.buttonsLayout = QtGui.QGridLayout()
-        self.buttonsLayout.addWidget(QtGui.QPushButton("&Save Figures"),0,0)
+        
+        figuresButton = QtGui.QPushButton("&Save Figures")
+        figuresButton.clicked.connect(self.saveFigures)
+        self.buttonsLayout.addWidget(figuresButton,0,0)
+        
         reportButton = QtGui.QPushButton("&Save Report")
         reportButton.clicked.connect(self.saveReport)
         self.buttonsLayout.addWidget(reportButton,0,1)
+        
         self.buttonsLayout.addWidget(QtGui.QPushButton("&Save Fingerprint"),0,2)
         self.buttonsWidget.setLayout(self.buttonsLayout)
         
