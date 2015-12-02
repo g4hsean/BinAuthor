@@ -200,7 +200,7 @@ class StatsView(PluginForm):
         self.button2Widget = QtGui.QWidget()
         QtGui.QPushButton("&Save Report", self.button2Widget)
         self.button3Widget = QtGui.QWidget()
-        QtGui.QPushButton("&Save Frequencies", self.button3Widget)
+        QtGui.QPushButton("&Save Fingerprint", self.button3Widget)
         
         #self.dummyWidget = QtGui.QWidget()
         #self.dummyWidget.setMinimumWidth(10)
