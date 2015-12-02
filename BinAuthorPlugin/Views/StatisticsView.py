@@ -198,15 +198,23 @@ class StatsView(PluginForm):
         QtGui.QPushButton("&Save Figures", self.button1Widget)
         self.button2Widget = QtGui.QWidget()
         QtGui.QPushButton("&Save Report", self.button2Widget)
+        self.button3Widget = QtGui.QWidget()
+        QtGui.QPushButton("&Save Frequencies", self.button3Widget)
+        
+        #self.dummyWidget = QtGui.QWidget()
+        #self.dummyWidget.setMinimumWidth(10)
         
         self.buttonsWidget = QtGui.QWidget()
         self.buttonsLayout = QtGui.QGridLayout()
         self.buttonsLayout.addWidget(self.button1Widget,0,0)
-        self.buttonsLayout.addWidget(self.button2Widget,0,1)        
+        self.buttonsLayout.addWidget(self.button2Widget,0,1)
+        self.buttonsLayout.addWidget(self.button3Widget,0,2)
+        #self.buttonsLayout.addWidget(self.dummyWidget,0,3)
+        self.buttonsLayout.setContentsMargins(0,0,5,0)
         self.buttonsWidget.setLayout(self.buttonsLayout)
         
         #self.column3.addWidget(self.buttonsWidget)
-        self.buttonsWidget.setFixedWidth(200)
+        self.buttonsWidget.setFixedWidth(300)
         
         self.widget2.setLayout(self.column3)
         
