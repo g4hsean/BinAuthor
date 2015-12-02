@@ -179,14 +179,23 @@ class FunctionCategorizer():
                                 thresholdMatches[instruction] += 1
 
             percentValue = len(thresholdMatches.keys())/float(len(self.instructionFeatures[function].keys())) * 100
-
-            if percentValue >= 75 and len(self.instructionFeatures[function].keys()) >= 5:
+            
+            numOfInstructionsThreshold = 15
+            '''
+            if len(self.instructionFeatures[function].keys()) < numOfInstructionsThreshold:
+                self.otherFunctionsDetected.append(function)
+            elif percentValue >= 75:
                 self.compilerFunctionsDetected.append(function)
-            elif len(self.instructionFeatures[function].keys()) < 5:
+            else:
+                self.userFunctionsDetected.append(function)
+            '''
+            if percentValue >= 75:
+                self.compilerFunctionsDetected.append(function)
+            elif len(self.instructionFeatures[function].keys()) < numOfInstructionsThreshold:
                 self.otherFunctionsDetected.append(function)
             else:
                 self.userFunctionsDetected.append(function)    
-
+            
         bulkInsert = []
         output = 'Compiler Functions'
         for function in self.compilerFunctionsDetected:
