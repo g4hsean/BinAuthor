@@ -4,6 +4,9 @@ from idaapi import PluginForm
 from pymongo import MongoClient
 import random
 from itertools import cycle, islice
+import copy
+from datetime import datetime
+import idc
 
 import numpy as np
 import matplotlib
@@ -17,6 +20,52 @@ from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as Naviga
 from PySide import QtGui, QtCore
 import BinAuthorPlugin.Algorithms.FunctionStatistics as InstructionGroupStatistics
 
+class htmlReport():
+    def generateReport(self,executableName,MD5,function):
+        dateNow = datetime.now()
+        html = '''
+        <style>
+    #mainContainer {
+        margin-left:15%
+    }
+</style>
+<html>
+    <div align="center"><h1>BinAuthor: Function Analysis Report</h1></div>
+    <div id="mainContainer">
+    <div >
+        <table border="1">
+            <tr>
+                <td><b>Executable Name:</b></td><td>''' + executableName + '''</td>
+            </tr>
+            <tr>
+                <td><b>Executable Hash:</b></td><td>''' + MD5 + '''</td>
+            </tr>
+            <tr>
+                <td><b>Function:</b></td><td>''' + function + '''</td>
+            </tr>
+            <tr>
+                <td><b>Report Generation Date:</b></td><td>''' + dateNow.strftime('%Y/%m/%d %I:%M:%S %p') +  '''</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table border="">
+            <tr>
+                <td><img src="KurtosisSkewness.jpeg" alt="Function Kurtosis And Skewness" height="250" width="600" /></td><td><img src="GroupMean.jpeg" alt="Group Mean" height="250" width="600" /></td>
+            </tr>
+            <tr>
+                <td><img src="GroupVariance.jpeg" alt="Smiley face" height="250" width="600" /></td><td><img src="MinimumFrequencies.jpeg" alt="Instructions With Minimum Frequencies" height="250" width="600" /></td>
+            </tr>
+            <tr>
+                <td><img src="MaximumFrequencies.jpeg" alt="Instructions With Maximum Frequencies" height="250" width="600" /></td><td><img src="FunctionCorrelations.jpeg" alt="Top 5 Function Correlations" height="250" width="600" /></td>
+            </tr>
+        </table>
+    </div>
+    </div>
+</html>
+'''
+        return html
+
 class StatsView(PluginForm):
     def setDetails(self,funcName):
         self.client = MongoClient('localhost', 27017)
@@ -29,6 +78,8 @@ class StatsView(PluginForm):
         self.minFreq = sys.maxint
         self.FunctionName = funcName
         self.CurrentMD5 = str(GetInputFileMD5())
+        
+        self.statsFigures = {"KurtosisSkewness": None,"GroupMean": None, "GroupVariance": None,"MinimumFrequencies": None,"MaximumFrequencies":None,"FunctionCorrelations":None}
 		
         for item in self.legendItems:
             if item["group"] not in self.legend.keys():
@@ -100,9 +151,10 @@ class StatsView(PluginForm):
         plt.title("Function Correlation")
         canvas2.setMinimumWidth(150)
         canvas2.setMinimumHeight(150)
+        self.statsFigures["FunctionCorrelations"] = f1
         return canvas2
         
-    def createBarChartA(self,dataDict,title):
+    def createBarChartA(self,dataDict,title,type):
                
         f1 = plt.figure(figsize=(1.5625,1.5))
         #f1.set_facecolor(None)
@@ -120,6 +172,8 @@ class StatsView(PluginForm):
         plt.title(title)
         canvas2.setMinimumWidth(150)
         canvas2.setMinimumHeight(150)
+        
+        self.statsFigures[type] = f1
         return canvas2
         
            
@@ -140,7 +194,28 @@ class StatsView(PluginForm):
         canvas.setMinimumWidth(150)
         canvas.setMinimumHeight(150)
         return canvas
-                
+
+    def saveReport(self):
+        fileName = str(idaapi.get_root_filename() + "_" + self.FunctionName[:15] + ".html")
+        dir = idc.AskFile(1,fileName,"Save as")
+        dir = dir[:-len(fileName)]
+        
+        if not os.path.exists(dir + str(idaapi.get_root_filename() + "_" + self.FunctionName[:15])):
+            os.makedirs(dir + str(idaapi.get_root_filename() + "_" + self.FunctionName[:15]))
+        dir = dir + str(idaapi.get_root_filename() + "_" + self.FunctionName[:15]) + "\\"
+        report = htmlReport()
+
+        fileOutput = open(dir+fileName,"wb")
+        fileOutput.write(report.generateReport(idaapi.get_root_filename(),self.CurrentMD5,self.FunctionName))
+        fileOutput.close()
+        
+        for graph in self.statsFigures.keys():
+            self.statsFigures[graph].set_figheight(2.500)
+            self.statsFigures[graph].set_figwidth(6.000)
+            self.statsFigures[graph].set_dpi(10)
+            self.statsFigures[graph].savefig(dir + graph + ".jpeg")
+
+            
     def OnCreate(self, Form):
         self.parent = self.FormToPySideWidget(Form)
         
@@ -205,9 +280,9 @@ class StatsView(PluginForm):
         self.middlePanel.setMinimumWidth((self.parent.frameGeometry().width()-400)/2)
         
         self.middlePanelLayout = QtGui.QVBoxLayout()
-        self.middlePanelLayout.addWidget(self.createBarChartA({u'Skewness':skewness, u'Kurtosis': kurtosis},"Function Skewness & Kurtosis"))
-        self.middlePanelLayout.addWidget(self.createBarChartA(variance,"Group Variance"))
-        self.middlePanelLayout.addWidget(self.createBarChartA(max,"Instruction With Maximum Frequencies"))
+        self.middlePanelLayout.addWidget(self.createBarChartA({u'Skewness':skewness, u'Kurtosis': kurtosis},"Function Skewness & Kurtosis","KurtosisSkewness"))
+        self.middlePanelLayout.addWidget(self.createBarChartA(variance,"Group Variance","GroupVariance"))
+        self.middlePanelLayout.addWidget(self.createBarChartA(max,"Instruction With Maximum Frequencies","MaximumFrequencies"))
         
         self.middlePanel.setLayout(self.middlePanelLayout)
         
@@ -215,9 +290,20 @@ class StatsView(PluginForm):
         self.rightPanel.setMinimumWidth((self.parent.frameGeometry().width()-400)/2)
         
         self.rightPanelLayout = QtGui.QVBoxLayout()
-        self.rightPanelLayout.addWidget(self.createBarChartA(mean,"Group Mean"))
-        self.rightPanelLayout.addWidget(self.createBarChartA(min,"Instruction With Minimum Frequencies"))
+        self.rightPanelLayout.addWidget(self.createBarChartA(mean,"Group Mean","GroupMean"))
+        self.rightPanelLayout.addWidget(self.createBarChartA(min,"Instruction With Minimum Frequencies","MinimumFrequencies"))
         self.rightPanelLayout.addWidget(self.createBarChartCorrelation(correlation))
+        
+        
+        #### for figures stupid fix but it works for now!
+        self.createBarChartA({u'Skewness':skewness, u'Kurtosis': kurtosis},"Function Skewness & Kurtosis","KurtosisSkewness")
+        self.createBarChartA(variance,"Group Variance","GroupVariance")
+        self.createBarChartA(max,"Instruction With Maximum Frequencies","MaximumFrequencies")
+        self.createBarChartA(mean,"Group Mean","GroupMean")
+        self.createBarChartA(min,"Instruction With Minimum Frequencies","MinimumFrequencies")
+        self.createBarChartCorrelation(correlation)
+        ####
+        
         
         self.rightPanel.setLayout(self.rightPanelLayout)
         
@@ -242,7 +328,9 @@ class StatsView(PluginForm):
         self.buttonsWidget = QtGui.QWidget() #Buttons
         self.buttonsLayout = QtGui.QGridLayout()
         self.buttonsLayout.addWidget(QtGui.QPushButton("&Save Figures"),0,0)
-        self.buttonsLayout.addWidget(QtGui.QPushButton("&Save Report"),0,1)
+        reportButton = QtGui.QPushButton("&Save Report")
+        reportButton.clicked.connect(self.saveReport)
+        self.buttonsLayout.addWidget(reportButton,0,1)
         self.buttonsLayout.addWidget(QtGui.QPushButton("&Save Fingerprint"),0,2)
         self.buttonsWidget.setLayout(self.buttonsLayout)
         
