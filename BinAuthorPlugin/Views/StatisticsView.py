@@ -191,8 +191,13 @@ class StatsView(PluginForm):
         swidth = self.listView.style().pixelMetric(QtGui.QStyle.PM_ScrollBarExtent)
         fwidth = self.listView.frameWidth() * 2
         
-        self.listView.setMinimumSize(QtCore.QSize(vwidth + hwidth + swidth + fwidth, 33.225*len(self.legend.keys())))
-        self.listView.setMaximumSize(QtCore.QSize(vwidth + hwidth + swidth + fwidth, 33.225*len(self.legend.keys())))
+        vheight = self.listView.verticalHeader().length()
+        hheight = self.listView.horizontalHeader().length()
+        self.listView.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.listView.setMinimumSize(QtCore.QSize(vwidth + hwidth + fwidth,vheight +25))
+        self.listView.setMaximumSize(QtCore.QSize(vwidth + hwidth + fwidth, vheight+25))
+        #self.listView.setMinimumSize(QtCore.QSize(vwidth + hwidth + swidth + fwidth, 33.225*len(self.legend.keys())))
+        #self.listView.setMaximumSize(QtCore.QSize(vwidth + hwidth + swidth + fwidth, 33.225*len(self.legend.keys())))
         
         
         
