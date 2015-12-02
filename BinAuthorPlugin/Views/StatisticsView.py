@@ -60,7 +60,7 @@ class StatsView(PluginForm):
 	    # multiple box plots on one figure
         canvas2 = FigureCanvas(f1)
         canvas2.setMinimumWidth(150)
-        canvas2.setMinimumHeight(220)
+        canvas2.setMinimumHeight(150)
         return canvas2
 	
     def createBarChart(self):
@@ -76,7 +76,7 @@ class StatsView(PluginForm):
 
         canvas2 = FigureCanvas(f1)
         canvas2.setMinimumWidth(150)
-        canvas2.setMinimumHeight(220)
+        canvas2.setMinimumHeight(150)
         return canvas2
     
     def createBarChartCorrelation(self,dataTupple):
@@ -99,7 +99,7 @@ class StatsView(PluginForm):
         plt.gca().set_ylim([min(dataPoints)-0.2,1])
         plt.title("Function Correlation")
         canvas2.setMinimumWidth(150)
-        canvas2.setMinimumHeight(220)
+        canvas2.setMinimumHeight(150)
         return canvas2
         
     def createBarChartA(self,dataDict,title):
@@ -119,7 +119,7 @@ class StatsView(PluginForm):
         plt.gcf().subplots_adjust(bottom=0.5)
         plt.title(title)
         canvas2.setMinimumWidth(150)
-        canvas2.setMinimumHeight(220)
+        canvas2.setMinimumHeight(150)
         return canvas2
         
            
@@ -138,7 +138,7 @@ class StatsView(PluginForm):
         axes.pie(sizes, explode=explode, labels=labels, colors=colors,autopct='%1.1f%%', shadow=True, startangle=90)
         
         canvas.setMinimumWidth(150)
-        canvas.setMinimumHeight(220)
+        canvas.setMinimumHeight(150)
         return canvas
                 
     def OnCreate(self, Form):
@@ -156,6 +156,109 @@ class StatsView(PluginForm):
         min = self.FunctionStats.getMinInstructionFromGroup()
         
         correlation = self.FunctionStats.correlation()
+        
+        
+        
+        ######
+        
+        self.leftPanel = QtGui.QWidget() #Left panel
+        self.leftPanel.setMinimumWidth(300)
+        
+        self.listView = QtGui.QTableWidget(len(self.legend.keys()),2)
+        
+        newItem = QtGui.QTableWidgetItem("Group Name")
+        self.listView.setHorizontalHeaderItem(0, newItem)
+        
+        newItem = QtGui.QTableWidgetItem("Title Frequency")
+        self.listView.setHorizontalHeaderItem(1, newItem)
+        counter = 0
+        for group in self.legend.keys():
+            newItem = QtGui.QTableWidgetItem(group)
+            self.listView.setItem(counter, 0, newItem)
+            newItem = QtGui.QTableWidgetItem(str(self.legend[group]))
+            self.listView.setItem(counter, 1, newItem)
+            counter += 1
+        
+        self.leftPanelLayout = QtGui.QVBoxLayout() 
+        self.leftPanelLayout.addWidget(self.listView,QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
+        self.leftPanel.setLayout(self.leftPanelLayout)
+        self.leftPanelLayout.setAlignment(self.listView,QtCore.Qt.AlignRight|QtCore.Qt.AlignTop)
+        #self.leftPanel.setMinimumHeight(self.parent.frameGeometry().height())
+        
+        
+        vwidth = self.listView.verticalHeader().width()
+        hwidth = self.listView.horizontalHeader().length()
+        swidth = self.listView.style().pixelMetric(QtGui.QStyle.PM_ScrollBarExtent)
+        fwidth = self.listView.frameWidth() * 2
+        
+        self.listView.setMinimumSize(QtCore.QSize(vwidth + hwidth + swidth + fwidth, 33.225*len(self.legend.keys())))
+        self.listView.setMaximumSize(QtCore.QSize(vwidth + hwidth + swidth + fwidth, 33.225*len(self.legend.keys())))
+        
+        
+        
+        self.middlePanel = QtGui.QWidget() #Middle panel
+        self.middlePanel.setMinimumWidth((self.parent.frameGeometry().width()-400)/2)
+        
+        self.middlePanelLayout = QtGui.QVBoxLayout()
+        self.middlePanelLayout.addWidget(self.createBarChartA({u'Skewness':skewness, u'Kurtosis': kurtosis},"Function Skewness & Kurtosis"))
+        self.middlePanelLayout.addWidget(self.createBarChartA(variance,"Group Variance"))
+        self.middlePanelLayout.addWidget(self.createBarChartA(max,"Instruction With Maximum Frequencies"))
+        
+        self.middlePanel.setLayout(self.middlePanelLayout)
+        
+        self.rightPanel = QtGui.QWidget() #Right panel
+        self.rightPanel.setMinimumWidth((self.parent.frameGeometry().width()-400)/2)
+        
+        self.rightPanelLayout = QtGui.QVBoxLayout()
+        self.rightPanelLayout.addWidget(self.createBarChartA(mean,"Group Mean"))
+        self.rightPanelLayout.addWidget(self.createBarChartA(min,"Instruction With Minimum Frequencies"))
+        self.rightPanelLayout.addWidget(self.createBarChartCorrelation(correlation))
+        
+        self.rightPanel.setLayout(self.rightPanelLayout)
+        
+        #self.containerPanel = QtGui.QWidget() #Widget that contains all pannels
+        self.containerPanelLayout = QtGui.QHBoxLayout()
+        
+        self.containerPanelLayout.addWidget(self.leftPanel,QtCore.Qt.AlignTop)
+        self.containerPanelLayout.addWidget(self.middlePanel)
+        self.containerPanelLayout.addWidget(self.rightPanel)
+        
+        self.centerMainPanel = QtGui.QWidget() #Center of main panel
+        self.centerMainPanel.setLayout(self.containerPanelLayout)
+        
+        self.label = QtGui.QLabel(self.parent) #Label
+        self.label.setGeometry(QtCore.QRect(self.parent.frameGeometry().width()/2, 0, 271, 51))
+        font = QtGui.QFont()
+        font.setPointSize(25)
+        self.label.setFont(font)
+        self.label.setText(self.FunctionName[:15])
+        
+        
+        self.buttonsWidget = QtGui.QWidget() #Buttons
+        self.buttonsLayout = QtGui.QGridLayout()
+        self.buttonsLayout.addWidget(QtGui.QPushButton("&Save Figures"),0,0)
+        self.buttonsLayout.addWidget(QtGui.QPushButton("&Save Report"),0,1)
+        self.buttonsLayout.addWidget(QtGui.QPushButton("&Save Fingerprint"),0,2)
+        self.buttonsWidget.setLayout(self.buttonsLayout)
+        
+        #self.column3.addWidget(self.buttonsWidget)
+        self.buttonsWidget.setGeometry(QtCore.QRect(self.parent.frameGeometry().width()/2, 0, 300, 51))
+        
+        self.FinalPanelLayout = QtGui.QVBoxLayout()
+        self.FinalPanelLayout.addWidget(self.label)
+        self.FinalPanelLayout.addWidget(self.centerMainPanel)
+        self.FinalPanelLayout.addWidget(self.buttonsWidget)
+        
+        self.FinalPanelLayout.setAlignment(self.label,QtCore.Qt.AlignCenter)
+        self.FinalPanelLayout.setAlignment(self.buttonsWidget,QtCore.Qt.AlignTop|QtCore.Qt.AlignRight)        
+        
+        self.parent.setLayout(self.FinalPanelLayout)
+        self.parent.repaint()
+        #####
+        
+        
+        
+        '''
         print correlation
         self.widget1 = QtGui.QWidget()
         self.widget1.setMinimumWidth((self.parent.frameGeometry().width()-300)/2)
@@ -239,6 +342,13 @@ class StatsView(PluginForm):
         self.finalWindow.addLayout(self.testLayout,0,1,QtCore.Qt.AlignTop)
         self.finalWindow.addWidget(self.buttonsWidget,1,1,QtCore.Qt.AlignRight)
         
+        self.label = QtGui.QLabel(self.parent)
+        self.label.setGeometry(QtCore.QRect(self.parent.frameGeometry().width()/2, 0, 271, 51))
+        font = QtGui.QFont()
+        font.setPointSize(25)
+        self.label.setFont(font)
+        self.label.setText(self.FunctionName[:15])
+        
         self.finalWindowWidget = QtGui.QWidget()
         
         scrollArea = QtGui.QScrollArea()
@@ -248,9 +358,10 @@ class StatsView(PluginForm):
         self.finalWindowWidget.setLayout(self.finalWindow)
         
         self.final = QtGui.QVBoxLayout()
+        self.final.addWidget(self.label)
         self.final.addWidget(self.finalWindowWidget)
         
-        self.parent.setLayout(self.final)
+        self.parent.setLayout(self.final)'''
         #scrollArea = QtGui.QScrollArea()
         #scrollArea.setBackgroundRole(Qt.Gui.QPalette.Dark)
         #scrollArea.setWidget(self.mainWindow)
