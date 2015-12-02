@@ -69,7 +69,7 @@ class InstructionGroupStatistics(object):
         correlations = {}
         
         functionGroups = {}
-        userFunctionNames = [item["function"] for item in self.db.FunctionLabels.find({"MD5":"07D2AB1855E0CEF2D46A198A029AFB95","type":"user","function": {"$ne":self.functionName}},{"function":1,"_id":0})]
+        userFunctionNames = [item["function"] for item in self.db.FunctionLabels.find({"MD5":str(self.MD5),"type":"user","function": {"$ne":self.functionName}},{"function":1,"_id":0})]
         
         print userFunctionNames
         functions = self.collection.find({"function": {"$in":userFunctionNames},"MD5":str(self.MD5), "group": { "$exists": "true"}},{"group": 1, "function": 1, "groupCount":1,"_id":0,"mean":1,"variance":1})

@@ -96,7 +96,7 @@ class StatsView(PluginForm):
         plt.setp(temp.get_xticklabels(), rotation=20, horizontalalignment='right')
         canvas2 = FigureCanvas(f1)
         plt.gcf().subplots_adjust(bottom=0.5)
-        plt.gca().set_ylim([0.97,1])
+        plt.gca().set_ylim([min(dataPoints),1])
         plt.title("Function Correlation")
         canvas2.setMinimumWidth(150)
         canvas2.setMinimumHeight(220)
@@ -156,7 +156,7 @@ class StatsView(PluginForm):
         min = self.FunctionStats.getMinInstructionFromGroup()
         
         correlation = self.FunctionStats.correlation()
-
+        print correlation
         self.widget1 = QtGui.QWidget()
         self.widget1.setMinimumWidth((self.parent.frameGeometry().width()-300)/2)
         self.widget2 = QtGui.QWidget()
