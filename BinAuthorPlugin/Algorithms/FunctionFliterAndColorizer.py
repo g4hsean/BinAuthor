@@ -44,6 +44,7 @@ class FunctionFilter():
             typeCounter = 0
             if ((flags&FUNC_LIB) != FUNC_LIB) and ((flags&1152) != 1152):
                 if function["type"] == "compiler":
+                    #.update_one({'_id': p['_id']},{'$set': {'d.a': existing + 1}}, upsert=False)
                     func.color = 0xACC7FF
                 if function["type"] == "other":
                     func.color = 0xCC6600

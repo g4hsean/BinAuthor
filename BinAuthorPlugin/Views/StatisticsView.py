@@ -78,6 +78,28 @@ class StatsView(PluginForm):
         canvas2.setMinimumWidth(150)
         canvas2.setMinimumHeight(220)
         return canvas2
+    
+    def createBarChartCorrelation(self,dataTupple):
+        f1 = plt.figure(figsize=(1.5625,1.5))
+        #f1.set_facecolor(None)
+        #f1.patch.set_alpha(0.0)
+        temp = f1.add_subplot(111)
+        
+        x_axis_Titles = [function[0] for function in dataTupple]
+        dataPoints = [function[1] for function in dataTupple]
+        
+        my_colors = list(islice(cycle(['b', 'r', 'g', 'y', 'k']), None, len(dataTupple)))
+        
+        temp.bar(range(len(dataTupple)), dataPoints, align='center', width=0.2,color=my_colors)
+        temp.set_xticks(range(len(dataTupple)))
+        temp.set_xticklabels(x_axis_Titles)
+        plt.setp(temp.get_xticklabels(), rotation=20, horizontalalignment='right')
+        canvas2 = FigureCanvas(f1)
+        plt.gcf().subplots_adjust(bottom=0.5)
+        plt.title("Function Correlation")
+        canvas2.setMinimumWidth(150)
+        canvas2.setMinimumHeight(220)
+        return canvas2
         
     def createBarChartA(self,dataDict,title):
                
@@ -132,8 +154,8 @@ class StatsView(PluginForm):
         max = self.FunctionStats.getMaxInstructionFromGroup()
         min = self.FunctionStats.getMinInstructionFromGroup()
         
-        print mean
-        print variance
+        correlation = self.FunctionStats.correlation()
+
         self.widget1 = QtGui.QWidget()
         self.widget1.setMinimumWidth((self.parent.frameGeometry().width()-300)/2)
         self.widget2 = QtGui.QWidget()
@@ -170,7 +192,7 @@ class StatsView(PluginForm):
         self.column3 = QtGui.QVBoxLayout()
         self.column3.addWidget(self.createBarChartA(mean,"Group Mean"))
         self.column3.addWidget(self.createBarChartA(min,"Instruction With Minimum Frequencies"))
-        self.column3.addWidget(self.createBarChart())
+        self.column3.addWidget(self.createBarChartCorrelation(correlation))
         
         self.button1Widget = QtGui.QWidget()
         QtGui.QPushButton("&Save Figures", self.button1Widget)
