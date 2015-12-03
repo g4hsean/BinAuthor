@@ -57,10 +57,10 @@ class htmlReport():
                 <td><b>Report Generation Date:</b></td><td>''' + dateNow.strftime('%Y/%m/%d %I:%M:%S %p') +  '''</td>
             </tr>
         </table>
-    </div>
+    </div><br>
     <div id="statsDiv">
     ''' + statsTable + '''
-    </div>
+    </div><br>
     <div>
         <table border="">
             <tr>
