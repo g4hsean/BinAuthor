@@ -277,7 +277,43 @@ class StatsView(PluginForm):
                     output += '<tr><td><b>' + function[0] + ':</b></td><td>' + str(function[1]) + '</td></tr>'
                 output += '</table></td></tr></table>'
         return output
-    
+    def storeFunctionStatistics(self):
+        outputSequence = ["Mean","Variance","Min","Max","Skewness","Kurtosis","Correlation"]
+        outputDict = {"ExecutableName":idaapi.get_root_filename(),"ExecutableMD5Hash":self.CurrentMD5,"FunctionName":self.FunctionName}
+        for statsType in outputSequence:
+            if statsType == "Skewness":
+                outputDict["Skewness"] = self.statistics[statsType]
+            elif statsType == "Kurtosis":
+                outputDict["Kurtosis"] = self.statistics[statsType]
+            elif statsType == "Mean":
+                groupMeans = {}
+                for group in self.statistics[statsType].keys():
+                    groupMeans[group] = self.statistics[statsType][group]
+                outputDict[statsType] = groupMeans
+            elif statsType == "Variance":
+                groupVariance = {}
+                for group in self.statistics[statsType].keys():
+                    groupVariance[group] = self.statistics[statsType][group]
+                outputDict[statsType] = groupVariance
+            elif statsType == "Min":
+                groupMin = {}
+                for group in self.statistics[statsType].keys():
+                    groupMin[group] = self.statistics[statsType][group]
+                outputDict[statsType] = groupMin
+            elif statsType == "Max":
+                groupMax = {}
+                for group in self.statistics[statsType].keys():
+                    groupMax[group] = self.statistics[statsType][group]
+                outputDict[statsType] = groupMax
+            elif statsType == "Correlation":
+                correlated = {}
+                for function in self.statistics[statsType]:
+                    correlated[function[0]] = function[1]
+                outputDict[statsType] = correlated
+        collection = self.db.FunctionFingerPrint
+        collection.insert(outputDict)
+        print "Function Fingerprint has been successfully saved to the database!"
+            
     def OnCreate(self, Form):
         self.parent = self.FormToPySideWidget(Form)
         
@@ -399,7 +435,7 @@ class StatsView(PluginForm):
         self.buttonsLayout.addWidget(reportButton,0,1)
         
         fingerprintButton = QtGui.QPushButton("&Save Fingerprint")
-        fingerprintButton.clicked.connect(self.generateStatisticsTable)
+        fingerprintButton.clicked.connect(self.storeFunctionStatistics)
         self.buttonsLayout.addWidget(fingerprintButton,0,2)
         self.buttonsWidget.setLayout(self.buttonsLayout)
         
