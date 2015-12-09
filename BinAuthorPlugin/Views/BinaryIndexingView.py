@@ -30,12 +30,11 @@ class BinaryIndexing():
         pushButtons = self.wid.findChildren(QtGui.QPushButton)
         
         for button in pushButtons:
-            buttonText = button.text()
-            if "Select Folder" in buttonText:
+            if "selectFolder" in button.objectName():
                 button.clicked.connect(self.selectFolder)
-            elif "Close" in buttonText:
+            elif "closeForm" in button.objectName():
                 button.clicked.connect(self.close)
-            elif "Index Binaries" in buttonText:
+            elif "indexAuthors" in button.objectName():
                 button.clicked.connect(self.indexBinaries)
         file.close()
         
@@ -47,10 +46,11 @@ class BinaryIndexing():
         for textbox in self.lineEditors:
             if "FolderInput" in textbox.objectName():
                 textbox.setText(folder)
+                self.folderInput = textbox
         
     def indexBinaries(self):
         print "Indexing Binaries!"
-        indexFolder = self.lineEditor.text()
+        indexFolder = self.folderInput.text()
         locationOfScript = os.path.dirname(os.path.realpath(__file__))[:-5] + "ExternalScripts\indexFiles.py" 
         DETACHED_PROCESS = 0x00000008
         Popen(["python",locationOfScript,indexFolder],close_fds=True, creationflags=DETACHED_PROCESS)
