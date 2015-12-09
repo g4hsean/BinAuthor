@@ -21,13 +21,23 @@ from PySide import QtGui, QtCore
 import BinAuthorPlugin.Algorithms.FunctionStatistics as InstructionGroupStatistics
 
 class htmlReport():
-    def generateReport(self,executableName,MD5,function):
+    def generateReport(self,executableName,MD5,function,statsTable):
         dateNow = datetime.now()
         html = '''
         <style>
+    
     #mainContainer {
         margin-left:15%
     }
+    #statsDiv td {
+        vertical-align:top
+    }
+	#statsDiv.table td{
+		width:100%
+	}
+    #statsDiv table{
+		width:85%
+	}
 </style>
 <html>
     <div align="center"><h1>BinAuthor: Function Analysis Report</h1></div>
@@ -47,17 +57,20 @@ class htmlReport():
                 <td><b>Report Generation Date:</b></td><td>''' + dateNow.strftime('%Y/%m/%d %I:%M:%S %p') +  '''</td>
             </tr>
         </table>
-    </div>
+    </div><br>
+    <div id="statsDiv">
+    ''' + statsTable + '''
+    </div><br>
     <div>
         <table border="">
             <tr>
-                <td><img src="KurtosisSkewness.jpeg" alt="Function Kurtosis And Skewness" height="250" width="600" /></td><td><img src="GroupMean.jpeg" alt="Group Mean" height="250" width="600" /></td>
+                <td><img src="KurtosisSkewness.png" alt="Function Kurtosis And Skewness" height="250" width="600" /></td><td><img src="GroupMean.png" alt="Group Mean" height="250" width="600" /></td>
             </tr>
             <tr>
-                <td><img src="GroupVariance.jpeg" alt="Smiley face" height="250" width="600" /></td><td><img src="MinimumFrequencies.jpeg" alt="Instructions With Minimum Frequencies" height="250" width="600" /></td>
+                <td><img src="GroupVariance.png" alt="Smiley face" height="250" width="600" /></td><td><img src="MinimumFrequencies.png" alt="Instructions With Minimum Frequencies" height="250" width="600" /></td>
             </tr>
             <tr>
-                <td><img src="MaximumFrequencies.jpeg" alt="Instructions With Maximum Frequencies" height="250" width="600" /></td><td><img src="FunctionCorrelations.jpeg" alt="Top 5 Function Correlations" height="250" width="600" /></td>
+                <td><img src="MaximumFrequencies.png" alt="Instructions With Maximum Frequencies" height="250" width="600" /></td><td><img src="FunctionCorrelations.png" alt="Top 5 Function Correlations" height="250" width="600" /></td>
             </tr>
         </table>
     </div>
@@ -206,18 +219,18 @@ class StatsView(PluginForm):
         report = htmlReport()
 
         fileOutput = open(dir+fileName,"wb")
-        fileOutput.write(report.generateReport(idaapi.get_root_filename(),self.CurrentMD5,self.FunctionName))
+        fileOutput.write(report.generateReport(idaapi.get_root_filename(),self.CurrentMD5,self.FunctionName,self.generateStatisticsTable()))
         fileOutput.close()
         
         for graph in self.statsFigures.keys():
             self.statsFigures[graph].set_figheight(2.500)
             self.statsFigures[graph].set_figwidth(6.000)
             self.statsFigures[graph].set_dpi(10)
-            self.statsFigures[graph].savefig(dir + graph + ".jpeg")
+            self.statsFigures[graph].savefig(dir + graph + ".png")
 
     def saveFigures(self):
-        dir = idc.AskFile(1,"Skewness.jpeg","Save as")
-        dir = dir[:-len("Skewness.jpeg")]
+        dir = idc.AskFile(1,"Skewness.png","Save as")
+        dir = dir[:-len("Skewness.png")]
         
         if not os.path.exists(dir + str(idaapi.get_root_filename() + "_" + self.FunctionName[:15])):
             os.makedirs(dir + str(idaapi.get_root_filename() + "_" + self.FunctionName[:15]))
@@ -227,7 +240,79 @@ class StatsView(PluginForm):
             self.statsFigures[graph].set_figheight(2.500)
             self.statsFigures[graph].set_figwidth(6.000)
             self.statsFigures[graph].set_dpi(10)
-            self.statsFigures[graph].savefig(dir + graph + ".jpeg")  
+            self.statsFigures[graph].savefig(dir + graph + ".png")  
+            
+    
+    def generateStatisticsTable(self):
+        output = ''
+        outputSequence = ["Mean","Variance","Min","Max","Skewness","Kurtosis","Correlation"]
+        for statsType in outputSequence:
+            if statsType == "Skewness":
+                output += '<tr><td><b>Skewness:</b></td><td>' + str(self.statistics[statsType]) + '</td></tr>'
+            elif statsType == "Kurtosis":
+                output += '<tr><td><b>Kurtosis:</b></td><td>' + str(self.statistics[statsType]) + '</td></tr></table></td><td>'
+            elif statsType == "Mean":
+                output += '<table><tr><td><h3>Group Mean:</h3><table border="">'
+                for group in self.statistics[statsType].keys():
+                    output += '<tr><td><b>' + group + ':</b></td><td>' + str(self.statistics[statsType][group]) + '</td></tr>'
+                output += '</table></td><td>'
+            elif statsType == "Variance":
+                output += '<h3>Group Variance:</h3><table border="">'
+                for group in self.statistics[statsType].keys():
+                    output += '<tr><td><b>' + group + ':</b></td><td>' + str(self.statistics[statsType][group]) + '</td></tr>'
+                output += '</table></td><td>'
+            elif statsType == "Min":
+                output += '<h3>Group Instruction Minimums:</h3><table border="">'
+                for group in self.statistics[statsType].keys():
+                    output += '<tr><td><b>' + group + ':</b></td><td>' + str(self.statistics[statsType][group]) + '</td></tr>'
+                output += '</table></td></tr>'
+            elif statsType == "Max":
+                output += '<tr><td><h3>Group Instruction Maximums:</h3><table border="">'
+                for group in self.statistics[statsType].keys():
+                    output += '<tr><td><b>' + group + ':</b></td><td>' + str(self.statistics[statsType][group]) + '</td></tr>'
+                output += '</table></td><td><h3>Skewness & Kurtosis:</h3><table border="">'
+            elif statsType == "Correlation":
+                output += '<h3>Correlated Functions:</h3><table border="">'
+                for function in self.statistics[statsType]:
+                    output += '<tr><td><b>' + function[0] + ':</b></td><td>' + str(function[1]) + '</td></tr>'
+                output += '</table></td></tr></table>'
+        return output
+    def storeFunctionStatistics(self):
+        outputSequence = ["Mean","Variance","Min","Max","Skewness","Kurtosis","Correlation"]
+        outputDict = {"ExecutableName":idaapi.get_root_filename(),"ExecutableMD5Hash":self.CurrentMD5,"FunctionName":self.FunctionName}
+        for statsType in outputSequence:
+            if statsType == "Skewness":
+                outputDict["Skewness"] = self.statistics[statsType]
+            elif statsType == "Kurtosis":
+                outputDict["Kurtosis"] = self.statistics[statsType]
+            elif statsType == "Mean":
+                groupMeans = {}
+                for group in self.statistics[statsType].keys():
+                    groupMeans[group] = self.statistics[statsType][group]
+                outputDict[statsType] = groupMeans
+            elif statsType == "Variance":
+                groupVariance = {}
+                for group in self.statistics[statsType].keys():
+                    groupVariance[group] = self.statistics[statsType][group]
+                outputDict[statsType] = groupVariance
+            elif statsType == "Min":
+                groupMin = {}
+                for group in self.statistics[statsType].keys():
+                    groupMin[group] = self.statistics[statsType][group]
+                outputDict[statsType] = groupMin
+            elif statsType == "Max":
+                groupMax = {}
+                for group in self.statistics[statsType].keys():
+                    groupMax[group] = self.statistics[statsType][group]
+                outputDict[statsType] = groupMax
+            elif statsType == "Correlation":
+                correlated = {}
+                for function in self.statistics[statsType]:
+                    correlated[function[0]] = function[1]
+                outputDict[statsType] = correlated
+        collection = self.db.FunctionFingerPrint
+        collection.insert(outputDict)
+        print "Function Fingerprint has been successfully saved to the database!"
             
     def OnCreate(self, Form):
         self.parent = self.FormToPySideWidget(Form)
@@ -245,7 +330,7 @@ class StatsView(PluginForm):
         
         correlation = self.FunctionStats.correlation()
         
-        
+        self.statistics = {"Skewness": skewness,"Kurtosis":kurtosis,"Mean":mean,"Variance":variance,"Max":max,"Min":min,"Correlation":correlation}
         
         ######
         
@@ -343,13 +428,15 @@ class StatsView(PluginForm):
         
         figuresButton = QtGui.QPushButton("&Save Figures")
         figuresButton.clicked.connect(self.saveFigures)
-        self.buttonsLayout.addWidget(figuresButton,0,0)
+        self.buttonsLayout.addWidget(figuresButton,0,0) 
         
         reportButton = QtGui.QPushButton("&Save Report")
         reportButton.clicked.connect(self.saveReport)
         self.buttonsLayout.addWidget(reportButton,0,1)
         
-        self.buttonsLayout.addWidget(QtGui.QPushButton("&Save Fingerprint"),0,2)
+        fingerprintButton = QtGui.QPushButton("&Save Fingerprint")
+        fingerprintButton.clicked.connect(self.storeFunctionStatistics)
+        self.buttonsLayout.addWidget(fingerprintButton,0,2)
         self.buttonsWidget.setLayout(self.buttonsLayout)
         
         #self.column3.addWidget(self.buttonsWidget)
