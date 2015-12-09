@@ -42,8 +42,11 @@ class BinaryIndexing():
     def selectFolder(self):
         print "Selecting Folder!"
         folder = QtGui.QFileDialog.getExistingDirectory()
-        self.lineEditor = self.wid.findChildren(QtGui.QLineEdit)[0]
-        self.lineEditor.setText(folder)
+        self.lineEditors = self.wid.findChildren(QtGui.QLineEdit)
+        
+        for textbox in self.lineEditors:
+            if "FolderInput" in textbox.objectName():
+                textbox.setText(folder)
         
     def indexBinaries(self):
         print "Indexing Binaries!"

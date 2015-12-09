@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="FolderInput">
    <property name="geometry">
     <rect>
      <x>16</x>
@@ -200,7 +200,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
+  <widget class="QLineEdit" name="AuthorInput">
    <property name="geometry">
     <rect>
      <x>16</x>
