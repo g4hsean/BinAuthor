@@ -12,11 +12,17 @@ from pprint import pprint
 from idaapi import PluginForm
 
 from PySide import QtGui, QtCore
+import BinAuthorPlugin.Views.BinaryIndexingView as BinaryIndexing
 
 class BinAuthorManager():
     def __init__(self):
         self._menu = sark.qt.MenuManager()
         self.addmenu_item_ctxs = []
+    
+    def launchBinaryIndexing(self):
+        self.indexing = BinaryIndexing.BinaryIndexing()
+        self.indexing.create()
+        self.indexing.show()
 
     def message(self,s):
         print s
@@ -34,5 +40,5 @@ class BinAuthorManager():
         self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 18", "", 0, self.message, ("Choice 18",)))
         self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 2", "", 0, self.message, ("Choice 2",)))
         self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 1", "", 0, self.message, ("Choice 1",)))
-        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Author Indexing", "", 0, self.message, ("Author Indexing",)))
+        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Author Indexing", "", 0, self.launchBinaryIndexing, ()))
         self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "filtration", "", 0, functionFilter.run, ()))
