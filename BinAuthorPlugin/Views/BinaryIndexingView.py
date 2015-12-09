@@ -13,6 +13,7 @@ import sark.qt
 from idaapi import plugin_t
 from pprint import pprint
 from idaapi import PluginForm
+from subprocess import Popen
 
 from PySide import QtGui, QtCore, QtUiTools
 
@@ -46,7 +47,10 @@ class BinaryIndexing():
         
     def indexBinaries(self):
         print "Indexing Binaries!"
-        print self.lineEditor.text()
+        indexFolder = self.lineEditor.text()
+        locationOfScript = os.path.dirname(os.path.realpath(__file__))[:-5] + "ExternalScripts\indexFiles.py" 
+        DETACHED_PROCESS = 0x00000008
+        Popen(["python",locationOfScript,indexFolder],close_fds=True, creationflags=DETACHED_PROCESS)
     def close(self):
         """
         Called when the plugin form is closed

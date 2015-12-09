@@ -58,14 +58,14 @@
   <widget class="QCheckBox" name="checkBox">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>240</y>
-     <width>70</width>
+     <x>20</x>
+     <y>230</y>
+     <width>101</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Choice 1</string>
+    <string>General Features</string>
    </property>
    <property name="checked">
     <bool>true</bool>
@@ -74,14 +74,14 @@
   <widget class="QCheckBox" name="checkBox_2">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>240</y>
-     <width>70</width>
+     <x>140</x>
+     <y>230</y>
+     <width>101</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Choice 2</string>
+    <string>Variable Features</string>
    </property>
    <property name="checked">
     <bool>true</bool>
@@ -90,14 +90,14 @@
   <widget class="QCheckBox" name="checkBox_3">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>240</y>
-     <width>70</width>
+     <x>260</x>
+     <y>230</y>
+     <width>141</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Choice 18</string>
+    <string>Quality-Related Features</string>
    </property>
    <property name="checked">
     <bool>true</bool>
@@ -150,6 +150,54 @@
    </property>
    <property name="text">
     <string>Index Binaries</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_4">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>250</y>
+     <width>121</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Embedded Features</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_5">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>250</y>
+     <width>111</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Structural Features</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_6">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>250</y>
+     <width>111</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Unusual Features</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>
