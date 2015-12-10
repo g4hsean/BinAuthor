@@ -53,13 +53,26 @@ class BinaryIndexing():
         indexFolder = self.folderInput.text()
         locationOfScript = os.path.dirname(os.path.realpath(__file__))[:-5] + "ExternalScripts\indexFiles.py" 
         DETACHED_PROCESS = 0x00000008
-        Popen(["python",locationOfScript,indexFolder],close_fds=True, creationflags=DETACHED_PROCESS)
+        self.radioButton = self.wid.findChildren(QtGui.QRadioButton)
+        multiple = 0
+        
+        authorName = None
+        for textbox in self.lineEditors:
+            if "AuthorInput" in textbox.objectName():
+                if textbox.isEnabled() == True:
+                    authorName = textbox.text()
+        
+        
+        for radio in self.radioButton:
+            if "multiple" in radio.objectName():
+                if radio.isChecked():
+                    multiple = 1
+        if authorName != None:
+            Popen(["python",locationOfScript,indexFolder,str(multiple),authorName],close_fds=True, creationflags=DETACHED_PROCESS)
+        else:
+            Popen(["python",locationOfScript,indexFolder,str(multiple)],close_fds=True, creationflags=DETACHED_PROCESS)
+
     def close(self):
-        """
-        Called when the plugin form is closed
-        """
-        #global ImpExpForm
-        #del ImpExpForm
         self.wid.close()
         print "Closed"
 

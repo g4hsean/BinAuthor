@@ -9,20 +9,20 @@ from pymongo import MongoClient
 from datetime import datetime
 import hashlib
 import idc
-import sark.qt
+#import sark.qt
 from idaapi import plugin_t
 from pprint import pprint
 from idaapi import PluginForm
-import numpy as np
-import matplotlib
+#import numpy as np
+#import matplotlib
 
-matplotlib.use('Qt4Agg')
-matplotlib.rcParams['backend.qt4']='PySide'
+#matplotlib.use('Qt4Agg')
+#matplotlib.rcParams['backend.qt4']='PySide'
 
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
-from PySide import QtGui, QtCore
+#import matplotlib.pyplot as plt
+#from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+#from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
+#from PySide import QtGui, QtCore
 import BinAuthorPlugin.Algorithms.FunctionFliterAndColorizer as FunctionFilter
 import pluginConfigurations
 import BinAuthorPlugin.PluginMenuManager.BinAuthorManager as BinAuthorManager
