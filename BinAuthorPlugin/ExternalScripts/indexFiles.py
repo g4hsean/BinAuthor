@@ -11,7 +11,7 @@ import shlex
 
 def executeScripts(file):
     scriptsFolder = os.path.dirname(os.path.realpath(__file__)) + ""
-    choice1 = join(scriptsFolder,"computeChoice1.py")
+    choice1 = join(scriptsFolder,"computeChoices.py")
     fileToAnalyze = file[0]
     AuthorName = file[1]
     
