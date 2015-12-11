@@ -413,9 +413,7 @@ class choice18():
             self.functionAddresstoRealFunctionName[function] = idaapi.get_func_name(function)
             self.createRegisterChain(True,function)
             
-    
-
-idc.ARGV = ["asdhasd","Perry"]        
+            
 choice1 = choice1()    
 choice1.choice1()
 choice2 = choice2()

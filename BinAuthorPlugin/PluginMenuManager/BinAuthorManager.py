@@ -13,6 +13,9 @@ from idaapi import PluginForm
 
 from PySide import QtGui, QtCore
 import BinAuthorPlugin.Views.BinaryIndexingView as BinaryIndexing
+import BinAuthorPlugin.Algorithms.Choices.Choice1 as Choice1
+import BinAuthorPlugin.Algorithms.Choices.Choice2 as Choice2
+import BinAuthorPlugin.Algorithms.Choices.Choice18 as Choice18
 
 class BinAuthorManager():
     def __init__(self):
@@ -36,9 +39,12 @@ class BinAuthorManager():
     def buildMenu(self,functionFilter):
         self._menu = sark.qt.MenuManager()
         self._menu.add_menu("&BinAuthor")
+        choice1 = Choice1.Choice1()
+        choice2 = Choice2.Choice2()
+        choice18 = Choice18.Choice18()
         self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Detect User Functions", "", 0, self.message, ("User function detection",)))
-        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 18", "", 0, self.message, ("Choice 18",)))
-        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 2", "", 0, self.message, ("Choice 2",)))
-        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 1", "", 0, self.message, ("Choice 1",)))
+        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 18", "", 0, choice18.choice18, ()))
+        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 2", "", 0, choice2.choice2, ()))
+        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 1", "", 0, choice1.choice1, ()))
         self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Author Indexing", "", 0, self.launchBinaryIndexing, ()))
         self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "filtration", "", 0, functionFilter.run, ()))
