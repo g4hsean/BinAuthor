@@ -19,7 +19,20 @@ from subprocess import Popen
 from PySide import QtGui, QtCore, QtUiTools
 
 class Results(PluginForm):
+    def returnColor(self,percentage):
+        percentage = (1-percentage) * 100
+        #R = (255 * percentage) / 100
+        #G = (255 * (100 - percentage)) / 100
+        #B = 0
         
+        if percentage < 50:
+            R = 255 * (percentage/50)
+            G = 255
+        else:
+            R = 255
+            G = 255 * ((50 - percentage % 50) / 50)
+        B = 0
+        return QtGui.QColor(R,G,B)
     def OnCreate(self,form):
         self.parent = self.FormToPySideWidget(form)
         self.wid = QtGui.QWidget()
@@ -32,18 +45,24 @@ class Results(PluginForm):
         layout = QtGui.QVBoxLayout()
         layout.addWidget(myWidget)
 
-        self.parent.setLayout(layout)
-        #self.wid.setWindowTitle('Binary Indexing')
-        #pushButtons = self.wid.findChildren(QtGui.QPushButton)
         
-        '''for button in pushButtons:
-            if "selectFolder" in button.objectName():
-                button.clicked.connect(self.selectFolder)
-            elif "closeForm" in button.objectName():
-                button.clicked.connect(self.close)
-            elif "indexAuthors" in button.objectName():
-                button.clicked.connect(self.indexBinaries)'''
+        comboBoxes = self.wid.findChildren(QtGui.QComboBox)
+        tableView = self.wid.findChildren(QtGui.QTableWidget)
+        for combo in comboBoxes:
+            if "comboBox" in combo.objectName():
+                combo.insertItems(0,["1","5","10","15","50","100"])
+                
+        for table in tableView:
+            if "tableWidget" in table.objectName():
+                rowCount = table.rowCount()
+                for row in xrange(0,rowCount):
+                    value = float(table.item(row,1).text())
+                    table.item(row,1).setBackground(self.returnColor(value))
+                    table.item(row,0).setBackground(self.returnColor(value))
+                    
+        
         file.close()
+        self.parent.setLayout(layout)
     '''    
     def selectFolder(self):
         print "Selecting Folder!"

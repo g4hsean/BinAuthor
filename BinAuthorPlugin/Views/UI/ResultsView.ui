@@ -16,6 +16,9 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QScrollArea" name="scrollArea">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
      <property name="lineWidth">
       <number>0</number>
      </property>
@@ -27,15 +30,12 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1108</width>
-        <height>826</height>
+        <width>1110</width>
+        <height>828</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
        <item row="2" column="0">
-        <widget class="QListWidget" name="listWidget"/>
-       </item>
-       <item row="1" column="0">
         <widget class="QWidget" name="widget" native="true">
          <property name="minimumSize">
           <size>
@@ -80,9 +80,334 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <item>
+             <property name="text">
+              <string>20</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QTableWidget" name="tableWidget">
+         <attribute name="horizontalHeaderStretchLastSection">
+          <bool>true</bool>
+         </attribute>
+         <row>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>1</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>2</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>3</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>4</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>5</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>6</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>7</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>8</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>9</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>10</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>11</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>12</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>13</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>14</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>15</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>16</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>17</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>18</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>19</string>
+          </property>
+         </row>
+         <column>
+          <property name="text">
+           <string>Authors</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Similarity Scores</string>
+          </property>
+         </column>
+         <item row="0" column="0">
+          <property name="text">
+           <string>Author 19</string>
+          </property>
+         </item>
+         <item row="0" column="1">
+          <property name="text">
+           <string>0.97</string>
+          </property>
+         </item>
+         <item row="1" column="0">
+          <property name="text">
+           <string>Author 13</string>
+          </property>
+         </item>
+         <item row="1" column="1">
+          <property name="text">
+           <string>0.88</string>
+          </property>
+         </item>
+         <item row="2" column="0">
+          <property name="text">
+           <string>Author 15</string>
+          </property>
+         </item>
+         <item row="2" column="1">
+          <property name="text">
+           <string>0.75</string>
+          </property>
+         </item>
+         <item row="3" column="0">
+          <property name="text">
+           <string>Author 22</string>
+          </property>
+         </item>
+         <item row="3" column="1">
+          <property name="text">
+           <string>0.64</string>
+          </property>
+         </item>
+         <item row="4" column="0">
+          <property name="text">
+           <string>Author 3</string>
+          </property>
+         </item>
+         <item row="4" column="1">
+          <property name="text">
+           <string>0.57</string>
+          </property>
+         </item>
+         <item row="5" column="0">
+          <property name="text">
+           <string>Author 4</string>
+          </property>
+         </item>
+         <item row="5" column="1">
+          <property name="text">
+           <string>0.53</string>
+          </property>
+         </item>
+         <item row="6" column="0">
+          <property name="text">
+           <string>Author 17</string>
+          </property>
+         </item>
+         <item row="6" column="1">
+          <property name="text">
+           <string>0.50</string>
+          </property>
+         </item>
+         <item row="7" column="0">
+          <property name="text">
+           <string>Author 1</string>
+          </property>
+         </item>
+         <item row="7" column="1">
+          <property name="text">
+           <string>0.22</string>
+          </property>
+         </item>
+         <item row="8" column="0">
+          <property name="text">
+           <string>Author 8</string>
+          </property>
+         </item>
+         <item row="8" column="1">
+          <property name="text">
+           <string>0.21</string>
+          </property>
+         </item>
+         <item row="9" column="0">
+          <property name="text">
+           <string>Author 16</string>
+          </property>
+         </item>
+         <item row="9" column="1">
+          <property name="text">
+           <string>0.20</string>
+          </property>
+         </item>
+         <item row="10" column="0">
+          <property name="text">
+           <string>Author 10</string>
+          </property>
+         </item>
+         <item row="10" column="1">
+          <property name="text">
+           <string>0.18</string>
+          </property>
+         </item>
+         <item row="11" column="0">
+          <property name="text">
+           <string>Author 7</string>
+          </property>
+         </item>
+         <item row="11" column="1">
+          <property name="text">
+           <string>0.16</string>
+          </property>
+         </item>
+         <item row="12" column="0">
+          <property name="text">
+           <string>Author 2</string>
+          </property>
+         </item>
+         <item row="12" column="1">
+          <property name="text">
+           <string>0.16</string>
+          </property>
+         </item>
+         <item row="13" column="0">
+          <property name="text">
+           <string>Author 5</string>
+          </property>
+         </item>
+         <item row="13" column="1">
+          <property name="text">
+           <string>0.16</string>
+          </property>
+         </item>
+         <item row="14" column="0">
+          <property name="text">
+           <string>Author 9</string>
+          </property>
+         </item>
+         <item row="14" column="1">
+          <property name="text">
+           <string>0.16</string>
+          </property>
+         </item>
+         <item row="15" column="0">
+          <property name="text">
+           <string>Author 11</string>
+          </property>
+         </item>
+         <item row="15" column="1">
+          <property name="text">
+           <string>0.11</string>
+          </property>
+         </item>
+         <item row="16" column="0">
+          <property name="text">
+           <string>Author 12</string>
+          </property>
+         </item>
+         <item row="16" column="1">
+          <property name="text">
+           <string>0.08</string>
+          </property>
+         </item>
+         <item row="17" column="0">
+          <property name="text">
+           <string>Author 14</string>
+          </property>
+         </item>
+         <item row="17" column="1">
+          <property name="text">
+           <string>0.05</string>
+          </property>
+         </item>
+         <item row="18" column="0">
+          <property name="text">
+           <string>Author 18</string>
+          </property>
+         </item>
+         <item row="18" column="1">
+          <property name="text">
+           <string>0.02</string>
+          </property>
+         </item>
+         <item row="19" column="0">
+          <property name="text">
+           <string>Author 20</string>
+          </property>
+         </item>
+         <item row="19" column="1">
+          <property name="text">
+           <string>0.02</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>
