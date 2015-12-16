@@ -19,17 +19,20 @@ from subprocess import Popen
 from PySide import QtGui, QtCore, QtUiTools
 
 class Results(PluginForm):
-    def __init__(self):
-        super(Results, self).__init__()
         
     def OnCreate(self,form):
         self.parent = self.FormToPySideWidget(form)
-        #self.wid = QtGui.QWidget()
+        self.wid = QtGui.QWidget()
         binaryUIPath = os.path.dirname(os.path.realpath(__file__)) + "\UI\ResultsView.ui"
         loader = QtUiTools.QUiLoader()
         file = QtCore.QFile(binaryUIPath)
         file.open(QtCore.QFile.ReadOnly)
-        myWidget = loader.load(file,self.parent)
+        myWidget = loader.load(file,self.wid)
+        # Grid
+        layout = QtGui.QVBoxLayout()
+        layout.addWidget(myWidget)
+
+        self.parent.setLayout(layout)
         #self.wid.setWindowTitle('Binary Indexing')
         #pushButtons = self.wid.findChildren(QtGui.QPushButton)
         
