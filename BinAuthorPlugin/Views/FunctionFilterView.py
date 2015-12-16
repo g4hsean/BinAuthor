@@ -26,7 +26,6 @@ from PySide import QtGui, QtCore
 import BinAuthorPlugin.Views.StatisticsView as StatsView
 
 class FunctionFilterList(PluginForm):
-	
     def imports_names_cb(self, ea, name, ord):
         self.items.append((ea, '' if not name else name, ord))
         # True -> Continue enumeration

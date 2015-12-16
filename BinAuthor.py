@@ -9,24 +9,17 @@ from pymongo import MongoClient
 from datetime import datetime
 import hashlib
 import idc
-#import sark.qt
+from sark.qt import QtGui, QtCore
+import sark
+import sark.ui
+import sark.qt
 from idaapi import plugin_t
 from pprint import pprint
 from idaapi import PluginForm
-#import numpy as np
-#import matplotlib
 
-#matplotlib.use('Qt4Agg')
-#matplotlib.rcParams['backend.qt4']='PySide'
-
-#import matplotlib.pyplot as plt
-#from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-#from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
-#from PySide import QtGui, QtCore
 import BinAuthorPlugin.Algorithms.FunctionFliterAndColorizer as FunctionFilter
 import pluginConfigurations
 import BinAuthorPlugin.PluginMenuManager.BinAuthorManager as BinAuthorManager
-
 
 class BinAuthor_plugin_t(plugin_t):
     flags = idaapi.PLUGIN_PROC
@@ -34,7 +27,7 @@ class BinAuthor_plugin_t(plugin_t):
     help = "Help if a matter of trust."
     wanted_name = "BinAuthor"
     wanted_hotkey = ""
-
+        
     def init(self):
         try:
             self.BinAuthorFunctionFilter = FunctionFilter.FunctionFilter()
@@ -54,6 +47,7 @@ class BinAuthor_plugin_t(plugin_t):
             del self.BinAuthor_manager
             idaapi.msg("Errors and fun!\n")
             return idaapi.PLUGIN_SKIP
+        
         
     def term(self):
         self.BinAuthor_manager.del_menu_items()

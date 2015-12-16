@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1115</width>
+    <height>884</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QScrollArea" name="scrollArea">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>9</y>
+     <width>1101</width>
+     <height>871</height>
+    </rect>
+   </property>
+   <property name="widgetResizable">
+    <bool>true</bool>
+   </property>
+   <widget class="QWidget" name="scrollAreaWidgetContents">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1099</width>
+      <height>869</height>
+     </rect>
+    </property>
+    <widget class="QListView" name="resultsList">
+     <property name="geometry">
+      <rect>
+       <x>15</x>
+       <y>50</y>
+       <width>1071</width>
+       <height>811</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="numberOfResults">
+     <property name="geometry">
+      <rect>
+       <x>820</x>
+       <y>20</y>
+       <width>261</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>820</x>
+       <y>0</y>
+       <width>111</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Number of Similarities:</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
