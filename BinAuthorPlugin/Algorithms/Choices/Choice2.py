@@ -107,6 +107,88 @@ class Choice2():
         output["FileMD5"] = self.fileMD5
         output["Author Name"] = self.authorName
         collection.insert(output)
+        
+    def getChoice2(self):
+        numOfInstructions = 0
+        printfNewline = [0,0]
+        mainEA = 0
+        #fileName = idc.ARGV[1]
+
+        self.getAllStrings()
+        for name in Names():
+            if (str(name[1]).find("main") != -1) and (len(str(name[1])) <= 5):
+                mainEA = name[0]
+
+        numberOfImports = idaapi.get_import_module_qty()
+
+        for counter in xrange(0, numberOfImports):
+            idaapi.enum_import_names(counter, self.getImportedFunctions)
+
+        for address in Heads(mainEA,FindFuncEnd(mainEA)):
+            numOfInstructions += 1
+
+
+        currentInstruction = 0
+        currentStackValue = ''
+        numberOfCalls = 0
+        previousInstructionEA = 0
+        for address in Heads(mainEA,FindFuncEnd(mainEA)):
+            currentInstruction += 1
+            if GetMnem(address) == "push":
+                previousInstructionEA = address
+                currentStackValue = idc.GetOpnd(address,0)
+            elif GetMnem(address) == "pop":
+                currentStackValue = ''
+            elif GetMnem(address) == "mov":
+                if idc.GetOpnd(address,0) in self.standardRegisters.keys():
+                    self.standardRegisters[idc.GetOpnd(address,0)] = idc.GetOperandValue(address,1)
+                    
+            distanceFromEndOfFunction = int(numOfInstructions * (3/float(4)))
+            if idc.GetOpType(address,0) == 1 and idc.GetOpnd(address,0) in self.standardRegisters.keys():
+                libraryInstruction = self.standardRegisters[idc.GetOpnd(address,0)]
+            else:
+                libraryInstruction = idc.GetOperandValue(address,0)
+            
+            for string in self.subStrings:
+                if string in idc.GetOpnd(address,1) and currentInstruction >= distanceFromEndOfFunction:
+                    self.libraryFunctionNamesDict[string][1] +=1
+            
+            if GetMnem(address) == "call" and currentInstruction >= distanceFromEndOfFunction:
+                numberOfCalls += 1
+            
+            if GetMnem(address) in self.returns.keys() and currentInstruction >= distanceFromEndOfFunction:
+                self.returns[GetMnem(address)] += 1
+                
+            if GetMnem(address) == "call" and libraryInstruction in self.libraryFunctionNameEADict.keys() and currentInstruction >= distanceFromEndOfFunction:
+                if self.libraryFunctionNameEADict[libraryInstruction] == "exit":
+                    if currentStackValue == "1":
+                        self.libraryFunctionNamesDict[self.libraryFunctionNameEADict[libraryInstruction]][1] += 1
+                else:
+                    if "printf" in self.libraryFunctionNameEADict[libraryInstruction] and GetMnem(previousInstructionEA) == "push":
+                        locationOfPushValue = idc.GetOperandValue(previousInstructionEA,0)
+                        
+                        if locationOfPushValue in self.allStrings.keys():
+                            if "\n" in self.allStrings[locationOfPushValue]:
+                                printfNewline[0] += 1
+                            else:
+                                printfNewline[1] += 1
+                            
+                            
+                    self.libraryFunctionNamesDict[self.libraryFunctionNameEADict[libraryInstruction]][1] += 1
+
+        output = {"LibraryFunctions": {}}
+        for libraryFunction in self.libraryFunctionNamesDict.keys():
+            output["LibraryFunctions"][libraryFunction] = self.libraryFunctionNamesDict[libraryFunction][1]
+        
+        output["calls"] = numberOfCalls
+        
+        output["returns"] = self.returns
+        output["printf with newline"] = printfNewline[0]
+        output["printf without newline"] = printfNewline[1]
+        output["FileName"] = self.fileName
+        output["FileMD5"] = self.fileMD5
+        output["Author Name"] = self.authorName
+        return output
 
     def getAllStrings(self):
         strings = idautils.Strings(default_setup = False)
@@ -135,3 +217,5 @@ class Choice2():
             self.libraryFunctionNamesDict["cerr"][0] = ea
             self.libraryFunctionNameEADict[ea] = "cerr"
         return True
+        
+
