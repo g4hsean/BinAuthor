@@ -8,6 +8,7 @@ import operator
 import BinAuthorPlugin.Algorithms.Choices.Choice1 as Choice1
 import BinAuthorPlugin.Algorithms.Choices.Choice2 as Choice2
 import BinAuthorPlugin.Algorithms.Choices.Choice18 as Choice18
+import minhash
 class AuthorClassification():
         
     def __init__(self):
@@ -16,7 +17,10 @@ class AuthorClassification():
         self.collection = self.db.Functions
         self.choice1 = self.db.Choice1
         self.choice2 = self.db.Choice2
+        self.choice18 = self.db.Choice18
         self.choice1Results = {}
+        self.choice2Results = {}
+        self.choice18Results = {}
     
     def getChoice1(self):
         choice1 = Choice1.Choice1()
@@ -28,7 +32,63 @@ class AuthorClassification():
             jaccardCoefficient = len(list(set(doc["features"])& set(features)))/float(len(list(set(doc["features"])| set(features))))
             self.choice1Results[doc['Author Name']] = jaccardCoefficient
         print self.choice1Results
+    
     def getChoice2(self):
+        
         choice2 = Choice2.Choice2()
         choice2 = choice2.getChoice2()
-        return 0
+        library = choice2["LibraryFunctions"]
+        returns = choice2["returns"]
+        
+        featureVector = library.values() + returns.values() + [choice2["calls"],choice2['printf without newline'],choice2['printf with newline']]
+        
+        documents = self.choice2.find({"$or":[{'LibraryFunctions.cout': library['cout']},{'LibraryFunctions.puts':library['puts']},{'LibraryFunctions.clock': library['clock']},{'LibraryFunctions.endl': library['endl']},{'LibraryFunctions.exit': library['exit']},{'LibraryFunctions.fprintf':library['fprintf']},{'LibraryFunctions.printf':library['printf']},{'LibraryFunctions.cerr': library['cerr']},{'LibraryFunctions.fflush':library['fflush']},{'LibraryFunctions.Xlength_error': library['Xlength_error']},{"returns.retn":returns['retn']},{"returns.ret":returns["ret"]},{"calls":choice2["calls"]},{'printf without newline': choice2['printf without newline']},{'printf with newline': choice2['printf with newline']}]})
+        
+        for doc in documents:
+            docFeatureVector = doc["LibraryFunctions"].values() + doc["returns"].values() + [doc["calls"],doc['printf without newline'],doc['printf with newline']] 
+            jaccardCoefficient = len(list(set(docFeatureVector)& set(featureVector)))/float(len(list(set(docFeatureVector)| set(featureVector))))
+            self.choice2Results[doc['Author Name']] = jaccardCoefficient
+        print self.choice2Results
+        
+    def getChoice18(self):
+        NUM_HASHES = 200
+        HASHES_PER_BAND = 20
+        NUM_BANDS = 200/HASHES_PER_BAND
+        
+        choice18 = Choice18.Choice18()
+        choice18 = choice18.choice18A()
+        allFunctionHashes = []
+        #databaseQuery = {"$or":[]}
+        candidateHashes = []
+        candidateMatches = {}
+        for function in choice18:
+            allFunctionHashes += function
+            
+            if len(function) == 0:
+                continue
+            
+            for funcMinhashes in function:
+                minhashTemp = funcMinhashes["MinHashSignature"]
+                register = funcMinhashes["register"]
+                candidateHashes.append(minhashTemp)
+                orQuery = {"$or":[]}
+                start = 0
+                while start < (NUM_HASHES-1):
+                    andList = []
+                    for counter in range(start,start+HASHES_PER_BAND):
+                        andList.append({"MinHashSignature."+str(counter):minhashTemp[counter]})
+                    orQuery["$or"].append({"$and":andList})
+                    start += HASHES_PER_BAND
+                #databaseQuery["$or"].append(orQuery)
+                documents = self.choice18.find({"$and":[{"register":register},orQuery]})
+
+                for document in documents:
+                    if document["Author Name"] not in candidateMatches.keys():
+                        candidateMatches[document["Author Name"]] = []
+                    candidateMatches[document["Author Name"]].append(minhash.similarity(minhashTemp,document["MinHashSignature"]))
+        for candidate in candidateMatches.keys():
+            NumberOfValues = float(len(candidateMatches[candidate]))
+            total = 0
+            for similarityScore in candidateMatches[candidate]:
+                total += float(similarityScore)
+            self.choice18Results[candidate] = total/NumberOfValues
