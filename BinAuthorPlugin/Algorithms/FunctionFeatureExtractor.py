@@ -61,6 +61,18 @@ class FeatureExtractor():
         except:
             pass
 
+    # def getInstructionFeatures(self,instructions,sum,functionInstructions,file):
+        # oldFileName = file
+        # bulkInsert = []
+        # for instruction in instructions.keys():
+            # mean = (functionInstructions[instruction]/float(sum))
+            # variance = ((functionInstructions[instruction] - mean)**2/sum)
+            # if functionInstructions[instruction] > 0:
+                # hashFunction = hashlib.md5()
+                # hashFunction.update(self.fileMD5 + "," + file + "," + "instructions," + instruction + "," + str(functionInstructions[instruction]) + "," + str(mean) + "," + str(variance))
+                # bulkInsert.append({"binaryFileName":self.fileName,"MD5":self.fileMD5,"Date Analyzed":self.dateAnalyzed,"function":oldFileName,"type":"instructions","hash":hashFunction.hexdigest(),"instruction": instruction,"instructionCount": functionInstructions[instruction], "mean": mean, "variance": variance})
+
+            
     def writeInstructionGroupFeatures(self,groups,allGroupSum,functionGroups,file):
         oldFileName = file
         bulkInsert = []
@@ -87,6 +99,37 @@ class FeatureExtractor():
         except:
             pass
 
+    # def run2(self):
+        # self.loadInstructionList()
+        # self.loadInstructionGroups()
+        # functionNamesToEA = {}
+            
+        # ea = idc.BeginEA()
+        # count = 0
+        # for funcea in Functions(idc.SegStart(ea), idc.SegEnd(ea)):
+            # functionInstructions = copy.deepcopy(self.instructions)
+            # functionGroups = copy.deepcopy(self.groups)
+            # sum = 0
+            # allGroupSum = 0
+            # functionName = idc.GetFunctionName(funcea)
+            # functionNamesToEA[functionName] = funcea
+            # originalfuncea = funcea
+            # currentea = funcea
+            # while currentea != idc.BADADDR and currentea < idc.FindFuncEnd(funcea):
+                # currentInstruction = idc.GetMnem(currentea)
+                # if currentInstruction in self.instructions.keys():
+                    # functionInstructions[currentInstruction] += 1
+                    # sum += 1
+                
+                # for group in self.groups.keys():
+                    # if currentInstruction in self.groups[group][0].keys():
+                        # functionGroups[group][1] += 1
+                        # functionGroups[group][0][currentInstruction] += 1
+                        # allGroupSum += 1
+                        
+                # currentea = idc.NextHead(currentea)
+            # return self.getInstructionFeatures(self.instructions,sum,functionInstructions,functionName)
+         
     def run(self):
         self.loadInstructionList()
         self.loadInstructionGroups()
