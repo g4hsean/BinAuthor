@@ -37,16 +37,16 @@ class choice1():
                 mainEA = name[0]
 
         currentea = mainEA
-        while currentea != BADADDR and currentea < FindFuncEnd(mainEA):
-            currentInstruction = GetMnem(currentea)
+        while currentea != idc.BADADDR and currentea < idc.FindFuncEnd(mainEA):
+            currentInstruction = idc.GetMnem(currentea)
             if currentInstruction in instructionCounts.keys():
                 instructionCounts[currentInstruction] += 1
             totalInstructions += 1
-            currentea = NextHead(currentea)
+            currentea = idc.NextHead(currentea)
 
-        for item in Heads(mainEA,FindFuncEnd(mainEA)):
+        for item in Heads(mainEA,idc.FindFuncEnd(mainEA)):
             #print hex(item) + ":" + GetMnem(item) + "\t" + str(idc.GetOpType(item,0)) + "\t" + str(idc.GetOpType(item,1))
-            if "call" == GetMnem(item) and idc.GetOpType(item,0) == 1:
+            if "call" == idc.GetMnem(item) and idc.GetOpType(item,0) == 1:
                 instructionCounts["indirect_call"] += 1
             if idc.GetOpType(item,0) == 1:
                 instructionCounts["reg_used"] += 1
@@ -242,7 +242,7 @@ class choice2():
         for counter in xrange(0, numberOfImports):
             idaapi.enum_import_names(counter, self.getImportedFunctions)
 
-        for address in Heads(mainEA,FindFuncEnd(mainEA)):
+        for address in Heads(mainEA,idc.FindFuncEnd(mainEA)):
             numOfInstructions += 1
 
 
@@ -250,14 +250,14 @@ class choice2():
         currentStackValue = ''
         numberOfCalls = 0
         previousInstructionEA = 0
-        for address in Heads(mainEA,FindFuncEnd(mainEA)):
+        for address in Heads(mainEA,idc.FindFuncEnd(mainEA)):
             currentInstruction += 1
-            if GetMnem(address) == "push":
+            if idc.GetMnem(address) == "push":
                 previousInstructionEA = address
                 currentStackValue = idc.GetOpnd(address,0)
-            elif GetMnem(address) == "pop":
+            elif idc.GetMnem(address) == "pop":
                 currentStackValue = ''
-            elif GetMnem(address) == "mov":
+            elif idc.GetMnem(address) == "mov":
                 if idc.GetOpnd(address,0) in self.standardRegisters.keys():
                     self.standardRegisters[idc.GetOpnd(address,0)] = idc.GetOperandValue(address,1)
                     
@@ -271,18 +271,18 @@ class choice2():
                 if string in idc.GetOpnd(address,1) and currentInstruction >= distanceFromEndOfFunction:
                     self.libraryFunctionNamesDict[string][1] +=1
             
-            if GetMnem(address) == "call" and currentInstruction >= distanceFromEndOfFunction:
+            if idc.GetMnem(address) == "call" and currentInstruction >= distanceFromEndOfFunction:
                 numberOfCalls += 1
             
-            if GetMnem(address) in self.returns.keys() and currentInstruction >= distanceFromEndOfFunction:
-                self.returns[GetMnem(address)] += 1
+            if idc.GetMnem(address) in self.returns.keys() and currentInstruction >= distanceFromEndOfFunction:
+                self.returns[idc.GetMnem(address)] += 1
                 
-            if GetMnem(address) == "call" and libraryInstruction in self.libraryFunctionNameEADict.keys() and currentInstruction >= distanceFromEndOfFunction:
+            if idc.GetMnem(address) == "call" and libraryInstruction in self.libraryFunctionNameEADict.keys() and currentInstruction >= distanceFromEndOfFunction:
                 if self.libraryFunctionNameEADict[libraryInstruction] == "exit":
                     if currentStackValue == "1":
                         self.libraryFunctionNamesDict[self.libraryFunctionNameEADict[libraryInstruction]][1] += 1
                 else:
-                    if "printf" in self.libraryFunctionNameEADict[libraryInstruction] and GetMnem(previousInstructionEA) == "push":
+                    if "printf" in self.libraryFunctionNameEADict[libraryInstruction] and idc.GetMnem(previousInstructionEA) == "push":
                         locationOfPushValue = idc.GetOperandValue(previousInstructionEA,0)
                         
                         if locationOfPushValue in self.allStrings.keys():
@@ -365,24 +365,24 @@ class choice18():
                 for address in Heads(block.startEA,block.endEA):
                     if idc.GetOpType(address, 0) == 1 and idc.GetOpnd(address, 0) != "":
                         if idc.GetOpnd(address, 0) not in self.functionRegisterChains[idaapi.get_func_name(ea)].keys():
-                            self.functionRegisterChains[idaapi.get_func_name(ea)][idc.GetOpnd(address, 0)] = [GetMnem(address)]
+                            self.functionRegisterChains[idaapi.get_func_name(ea)][idc.GetOpnd(address, 0)] = [idc.GetMnem(address)]
                         else:
-                            self.functionRegisterChains[idaapi.get_func_name(ea)][idc.GetOpnd(address, 0)].append(GetMnem(address))
+                            self.functionRegisterChains[idaapi.get_func_name(ea)][idc.GetOpnd(address, 0)].append(idc.GetMnem(address))
                             
                         if idc.GetOpnd(address, 0) not in registerChain.keys():
-                            registerChain[idc.GetOpnd(address, 0)] = [GetMnem(address)]
+                            registerChain[idc.GetOpnd(address, 0)] = [idc.GetMnem(address)]
                         else:
-                            registerChain[idc.GetOpnd(address, 0)].append(GetMnem(address))
+                            registerChain[idc.GetOpnd(address, 0)].append(idc.GetMnem(address))
                     if idc.GetOpType(address, 1) == 1  and idc.GetOpnd(address, 1) != "":
                         if idc.GetOpnd(address, 1) not in self.functionRegisterChains[idaapi.get_func_name(ea)].keys():
-                            self.functionRegisterChains[idaapi.get_func_name(ea)][idc.GetOpnd(address, 1)] = [GetMnem(address)]
+                            self.functionRegisterChains[idaapi.get_func_name(ea)][idc.GetOpnd(address, 1)] = [idc.GetMnem(address)]
                         else:
-                            self.functionRegisterChains[idaapi.get_func_name(ea)][idc.GetOpnd(address, 1)].append(GetMnem(address))
+                            self.functionRegisterChains[idaapi.get_func_name(ea)][idc.GetOpnd(address, 1)].append(idc.GetMnem(address))
                         
                         if idc.GetOpnd(address, 1) not in registerChain.keys():
-                            registerChain[idc.GetOpnd(address, 1)] = [GetMnem(address)]
+                            registerChain[idc.GetOpnd(address, 1)] = [idc.GetMnem(address)]
                         else:
-                            registerChain[idc.GetOpnd(address, 1)].append(GetMnem(address))
+                            registerChain[idc.GetOpnd(address, 1)].append(idc.GetMnem(address))
                 for register in registerChain.keys():
                     fingerPrint = str(register)
                     functionMinhashes = {}
@@ -413,7 +413,44 @@ class choice18():
             self.functionAddresstoRealFunctionName[function] = idaapi.get_func_name(function)
             self.createRegisterChain(True,function)
             
-            
+class _Strings():
+    def __init__(self):
+        self.allStrings = []
+        self.client = MongoClient('localhost', 27017)
+        self.db = self.client.BinAuthor
+        self.collection = self.db.Strings
+        
+        self.fileName = idaapi.get_root_filename()
+        self.fileMD5 = idautils.GetInputFileMD5()
+        self.authorName = self.fileName
+        
+    def _Strings(self):
+        strings = idautils.Strings(default_setup = False)
+        strings.setup(strtypes=Strings.STR_C | Strings.STR_UNICODE, ignore_instructions = True, display_only_existing_strings = True,minlen=4)
+        for string in strings:
+            self.allStrings.append(str(string))
+        
+        output = {"Strings": self.allStrings}      
+        output["FileName"] = self.fileName
+        output["FileMD5"] = self.fileMD5
+        output["Author Name"] = self.authorName
+        
+        self.collection.insert(output)
+        
+    def getAllStrings(self):
+        strings = idautils.Strings(default_setup = False)
+        strings.setup(strtypes=Strings.STR_C | Strings.STR_UNICODE, ignore_instructions = True, display_only_existing_strings = True,minlen=4)
+        for string in strings:
+            self.allStrings.append(str(string))
+        
+        output = {"Strings": self.allStrings}      
+        output["FileName"] = self.fileName
+        output["FileMD5"] = self.fileMD5
+        output["Author Name"] = self.authorName
+        
+        return output
+strings = _Strings()   
+strings._Strings()     
 choice1 = choice1()    
 choice1.choice1()
 choice2 = choice2()

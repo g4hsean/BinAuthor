@@ -42,3 +42,11 @@ class _Strings():
         output["Author Name"] = self.authorName
         
         return output
+        
+    def getAllStringsA(self):
+        strings = idautils.Strings(default_setup = False)
+        allStrings = []
+        strings.setup(strtypes=Strings.STR_C | Strings.STR_UNICODE, ignore_instructions = True, display_only_existing_strings = True,minlen=4)
+        for string in strings:
+            allStrings.append(str(string))
+        return allStrings

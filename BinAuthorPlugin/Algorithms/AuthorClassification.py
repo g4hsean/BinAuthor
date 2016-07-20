@@ -8,7 +8,9 @@ import operator
 import BinAuthorPlugin.Algorithms.Choices.Choice1 as Choice1
 import BinAuthorPlugin.Algorithms.Choices.Choice2 as Choice2
 import BinAuthorPlugin.Algorithms.Choices.Choice18 as Choice18
+import BinAuthorPlugin.Algorithms.Choices.Strings as StringsMatching
 import minhash
+from Levenshtein import *
 class AuthorClassification():
         
     def __init__(self):
@@ -18,9 +20,11 @@ class AuthorClassification():
         self.choice1 = self.db.Choice1
         self.choice2 = self.db.Choice2
         self.choice18 = self.db.Choice18
+        self.Strings = self.db.Strings
         self.choice1Results = {}
         self.choice2Results = {}
         self.choice18Results = {}
+        self.stringResults = {}
     
     def getChoice1(self):
         choice1 = Choice1.Choice1()
@@ -31,7 +35,7 @@ class AuthorClassification():
         for doc in documents:
             jaccardCoefficient = len(list(set(doc["features"])& set(features)))/float(len(list(set(doc["features"])| set(features))))
             self.choice1Results[doc['Author Name']] = jaccardCoefficient
-        print self.choice1Results
+        return self.choice1Results
     
     def getChoice2(self):
         
@@ -48,7 +52,7 @@ class AuthorClassification():
             docFeatureVector = doc["LibraryFunctions"].values() + doc["returns"].values() + [doc["calls"],doc['printf without newline'],doc['printf with newline']] 
             jaccardCoefficient = len(list(set(docFeatureVector)& set(featureVector)))/float(len(list(set(docFeatureVector)| set(featureVector))))
             self.choice2Results[doc['Author Name']] = jaccardCoefficient
-        print self.choice2Results
+        return self.choice2Results
         
     def getChoice18(self):
         NUM_HASHES = 200
@@ -92,3 +96,27 @@ class AuthorClassification():
             for similarityScore in candidateMatches[candidate]:
                 total += float(similarityScore)
             self.choice18Results[candidate] = total/NumberOfValues
+            
+        return self.choice18Results
+        
+    def getStringSimilarityScores(self):
+        strings = StringsMatching._Strings()
+        stringList = strings.getAllStringsA()
+        
+        Authors = {}
+        
+        documents = self.Strings.find()
+        for document in documents:
+            if document["Author Name"] not in Authors.keys():
+                Authors[document["Author Name"]] = {"score":0}
+            allTargetSimilarities = []    
+            for targetString in stringList:
+                similarities = []
+                for testString in document["Strings"]:
+                    print targetString,testString
+                    similarities.append(1-(distance(str(targetString),str(testString))/float(max([len(targetString),len(testString)]))))
+                allTargetSimilarities.append(max(similarities)) # get the highest similarity value which should indicate the closest matched string
+                #allTargetSimilarities.append(reduce(lambda x, y: x + y, similarities) / len(similarities)) #Compute the average of similarities for all strings in test set
+            Authors[document["Author Name"]]["score"] = reduce(lambda x, y: x + y, allTargetSimilarities) / len(allTargetSimilarities) # compute the average score for the similarity between target and test application
+        return Authors
+        

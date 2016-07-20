@@ -14,6 +14,7 @@ from idaapi import PluginForm
 from PySide import QtGui, QtCore
 import BinAuthorPlugin.Views.BinaryIndexingView as BinaryIndexing
 import BinAuthorPlugin.Views.ResultsView as Results
+import BinAuthorPlugin.Views.MetricsView as Metrics
 import BinAuthorPlugin.Algorithms.Choices.Choice1 as Choice1
 import BinAuthorPlugin.Algorithms.Choices.Choice2 as Choice2
 import BinAuthorPlugin.Algorithms.Choices.Choice18 as Choice18
@@ -27,6 +28,11 @@ class BinAuthorManager():
         self.indexing = BinaryIndexing.BinaryIndexing()
         self.indexing.create()
         self.indexing.show()
+    
+    def showMetrics(self):
+        self.metricsResults = Metrics.Metrics()
+        self.metricsResults.Show()
+    
     def showResults(self):
         self.results = Results.Results()
         self.results.Show()
@@ -48,6 +54,7 @@ class BinAuthorManager():
         choice18 = Choice18.Choice18()
         authorClassification = AuthorClassification.AuthorClassification()
         self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Author Identification", "", 0, self.showResults, ()))
+        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Similarity Metrics", "", 0, self.showMetrics, ()))
         #self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 18", "", 0, choice18.choice18, ()))
         self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 2", "", 0, choice2.choice2, ()))
         self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 1", "", 0, choice1.choice1, ()))
