@@ -109,12 +109,14 @@ class AuthorClassification():
         for document in documents:
             if document["Author Name"] not in Authors.keys():
                 Authors[document["Author Name"]] = {"score":0}
-            allTargetSimilarities = []    
+            allTargetSimilarities = []
+            if len(document["Strings"]) == 0:
+                continue
             for targetString in stringList:
                 similarities = []
                 for testString in document["Strings"]:
-                    print targetString,testString
                     similarities.append(1-(distance(str(targetString),str(testString))/float(max([len(targetString),len(testString)]))))
+
                 allTargetSimilarities.append(max(similarities)) # get the highest similarity value which should indicate the closest matched string
                 #allTargetSimilarities.append(reduce(lambda x, y: x + y, similarities) / len(similarities)) #Compute the average of similarities for all strings in test set
             Authors[document["Author Name"]]["score"] = reduce(lambda x, y: x + y, allTargetSimilarities) / len(allTargetSimilarities) # compute the average score for the similarity between target and test application

@@ -98,6 +98,15 @@
          <property name="rowCount">
           <number>0</number>
          </property>
+         <attribute name="horizontalHeaderVisible">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="horizontalHeaderCascadingSectionResizes">
+          <bool>true</bool>
+         </attribute>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>200</number>
+         </attribute>
          <attribute name="horizontalHeaderStretchLastSection">
           <bool>true</bool>
          </attribute>
@@ -105,25 +114,55 @@
           <property name="text">
            <string>Author Matches</string>
           </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>String Usage Similarity</string>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
           </property>
          </column>
          <column>
           <property name="text">
-           <string>Choice 1</string>
+           <string>Quality Features</string>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
           </property>
          </column>
          <column>
           <property name="text">
-           <string>Choice 2</string>
+           <string>Code Organization Features</string>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
           </property>
          </column>
          <column>
           <property name="text">
-           <string>Choice 18</string>
+           <string>Generalization Features</string>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Variable Utilization Features</string>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
           </property>
          </column>
         </widget>
