@@ -1,0 +1,11 @@
+push edi
+mov dword ptr [eax+28h],0
+mov dword ptr [eax+2Ch],0
+mov dword ptr [eax+30h],0
+call inflateResetKeep
+add esp,4
+pop esi
+pop edi
+pop ebx
+pop ebp
+ret

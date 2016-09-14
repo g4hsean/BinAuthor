@@ -16,6 +16,7 @@ from idaapi import PluginForm
 from subprocess import Popen
 
 from PySide import QtGui, QtCore, QtUiTools
+import pluginConfigurations
 
 class BinaryIndexing():
    
@@ -68,9 +69,9 @@ class BinaryIndexing():
                 if radio.isChecked():
                     multiple = 1
         if authorName != None:
-            Popen(["python",locationOfScript,indexFolder,str(multiple),authorName],close_fds=True, creationflags=DETACHED_PROCESS)
+            Popen([pluginConfigurations.getPythonPath(),locationOfScript,indexFolder,str(multiple),authorName],close_fds=True, creationflags=DETACHED_PROCESS)
         else:
-            Popen(["python",locationOfScript,indexFolder,str(multiple)],close_fds=True, creationflags=DETACHED_PROCESS)
+            Popen([pluginConfigurations.getPythonPath(),locationOfScript,indexFolder,str(multiple)],close_fds=True, creationflags=DETACHED_PROCESS)
 
     def close(self):
         self.wid.close()

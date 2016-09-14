@@ -65,7 +65,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>General Features</string>
+    <string>Quality Features</string>
    </property>
    <property name="checked">
     <bool>true</bool>
@@ -74,14 +74,14 @@
   <widget class="QCheckBox" name="checkBox_2">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>160</x>
      <y>340</y>
-     <width>101</width>
-     <height>17</height>
+     <width>161</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>Variable Features</string>
+    <string>Code Organization Features</string>
    </property>
    <property name="checked">
     <bool>true</bool>
@@ -90,14 +90,14 @@
   <widget class="QCheckBox" name="checkBox_3">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>340</y>
+     <x>20</x>
+     <y>360</y>
      <width>141</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Quality-Related Features</string>
+    <string>Generalization Features</string>
    </property>
    <property name="checked">
     <bool>true</bool>
@@ -152,49 +152,17 @@
     <string>Index Authors</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox_4">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>360</y>
-     <width>121</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Embedded Features</string>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QCheckBox" name="checkBox_5">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>160</x>
      <y>360</y>
-     <width>111</width>
+     <width>161</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Structural Features</string>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkBox_6">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>360</y>
-     <width>111</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Unusual Features</string>
+    <string>Variable Utilization Features</string>
    </property>
    <property name="checked">
     <bool>true</bool>
@@ -279,9 +247,7 @@
   <zorder>label_2</zorder>
   <zorder>closeForm</zorder>
   <zorder>indexAuthors</zorder>
-  <zorder>checkBox_4</zorder>
   <zorder>checkBox_5</zorder>
-  <zorder>checkBox_6</zorder>
   <zorder>AuthorInput</zorder>
   <zorder>label_3</zorder>
  </widget>

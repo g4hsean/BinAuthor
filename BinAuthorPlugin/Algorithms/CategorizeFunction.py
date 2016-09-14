@@ -10,7 +10,6 @@ from datetime import datetime
 import hashlib
 import idc
 from idaapi import plugin_t
-from pprint import pprint
 from idaapi import PluginForm
 import pluginConfigurations
 

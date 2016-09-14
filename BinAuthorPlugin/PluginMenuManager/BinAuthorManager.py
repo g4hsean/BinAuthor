@@ -19,6 +19,7 @@ import BinAuthorPlugin.Algorithms.Choices.Choice1 as Choice1
 import BinAuthorPlugin.Algorithms.Choices.Choice2 as Choice2
 import BinAuthorPlugin.Algorithms.Choices.Choice18 as Choice18
 import BinAuthorPlugin.Algorithms.AuthorClassification as AuthorClassification
+import BinAuthorPlugin.Algorithms.Choices.Strings as StringsMatching
 class BinAuthorManager():
     def __init__(self):
         self._menu = sark.qt.MenuManager()
@@ -53,11 +54,12 @@ class BinAuthorManager():
         choice2 = Choice2.Choice2()
         choice18 = Choice18.Choice18()
         authorClassification = AuthorClassification.AuthorClassification()
+        strings = StringsMatching._Strings()
+        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Author Indexing", "", 0, self.launchBinaryIndexing, ()))
         self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Author Identification", "", 0, self.showResults, ()))
         self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Similarity Metrics", "", 0, self.showMetrics, ()))
-        #self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 18", "", 0, choice18.choice18, ()))
-        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 2", "", 0, choice2.choice2, ()))
-        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Choice 1", "", 0, choice1.choice1, ()))
-        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Author Indexing", "", 0, self.launchBinaryIndexing, ()))
-        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Filtration", "", 0, functionFilter.run, ()))
-        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/","Test", "", 0, authorClassification.getChoice1, ()))
+        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Function Classification", "", 0, functionFilter.run, ()))
+        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Variable Utilization Features", "", 0, choice18.choice18, ()))
+        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Generalization Features", "", 0, choice2.choice2, ()))
+        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/", "Code Organization Features", "", 0, choice1.choice1, ()))
+        self.addmenu_item_ctxs.append(idaapi.add_menu_item("BinAuthor/","Quality Features", "", 0, strings._Strings, ()))

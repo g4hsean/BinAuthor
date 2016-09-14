@@ -1,0 +1,10 @@
+push eax
+mov [edi+8],ebx
+mov [edi+24h],esi
+call _inflateReset
+add esp,4
+pop esi
+pop ebx
+pop edi
+pop ebp
+retn

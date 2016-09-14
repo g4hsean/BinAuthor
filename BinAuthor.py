@@ -17,8 +17,8 @@ from idaapi import plugin_t
 from pprint import pprint
 from idaapi import PluginForm
 
-import BinAuthorPlugin.Algorithms.FunctionFliterAndColorizer as FunctionFilter
 import pluginConfigurations
+import BinAuthorPlugin.Algorithms.FunctionFliterAndColorizer as FunctionFilter
 import BinAuthorPlugin.PluginMenuManager.BinAuthorManager as BinAuthorManager
 
 class BinAuthor_plugin_t(plugin_t):

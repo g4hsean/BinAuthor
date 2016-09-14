@@ -1,0 +1,2 @@
+DataTransfer,7,0.7,3.969
+ControlTransfer,3,0.3,0.729

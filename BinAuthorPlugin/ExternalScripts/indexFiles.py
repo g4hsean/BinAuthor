@@ -15,8 +15,7 @@ def executeScripts(file):
     fileToAnalyze = file[0]
     AuthorName = file[1]
     
-    executionString = shlex.split('idaw.exe -S"' + choice1 + ' \\"'+ AuthorName + '\\"" ' + '"'+fileToAnalyze+'"')
-    
+    executionString = shlex.split('cmd.exe /c idaw.exe -S"' + choice1 + ' \\"'+ AuthorName + '\\"" ' + '"'+fileToAnalyze+'"')
     call(executionString)
 
     
