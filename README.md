@@ -6,6 +6,30 @@ in conjunction with constructed features to match an author to an unknown binary
 
 # Installation
 
+Requirements:
+
+OS: windows (any version supported by IDA Pro 6.8 or higher) other operating systems coming soon
+Python: 2.7 64 bit version
+MongoDB: Any version with WiredTiger
+
+To install the BinAuthor IDA Pro plugin you should follow the steps below:
+
+Step 1: Clone the BinAuthor repository to a location of your choosing
+
+Step 2: Enter the BinAuthor->Installer->Dependencies directory and install git and VCForPython27
+
+Step 3: Download from the internet MongoDB for x64 systems
+
+Step 4: navigate to BinAuthor->Installer directory and run BinAuthor-Installer.py as Administrator <- ****IMPORTANT****
+        and follow the installation instructions. (note folder dialogs need only the root folder of both idapro and mongodb ie. IDA Pro 6.8 and MongoDB folders)
+        Note: If no errors are encountered during the install process then proceed to step 5 otherwise contact the Binauthor
+              Developer team.
+Step 5: Navigate to the Desktop and click on the BinAuthor_MongoDB_Start.bat file to start mongoDB
+
+Step 6: Load IDA Pro if there are no error dialogs about the plugin then everything is set up.
+
+Step 7: Follow the below instructions for plugin usage.
+
 # Basic Usage
 
 Creation of Initial Author Database:
@@ -15,40 +39,8 @@ authors. To do this you open up IDA Pro and then click BinAuthor->Author Indexin
 this is the first time the tool is run, we would like to create our dataset to which we will use for identifying the authors of unknow binaries. To index more than one author you must create a parent 
 folder (AuthorsDirectory) with a subfolder structure like the one below:
 
-AuthorsDirectory
-      |
-      ---------AuthorName1
-      |             |
-      |             ---------binary1.exe
-      |             |
-      |             ---------binary2.exe
-      |             .
-      |             .
-      |             .
-      |             ---------binaryN.exe
-      |
-      ---------AuthorName2      
-      |             |
-      |             ---------binary1.exe
-      |             |
-      |             ---------binary2.exe
-      |             .
-      |             .
-      |             .
-      |             ---------binaryN.exe
-      .
-      .
-      .
-      ---------AuthorNameN      
-      |             |
-      |             ---------binary1.exe
-      |             |
-      |             ---------binary2.exe
-      |             .
-      |             .
-      |             .
-      |             ---------binaryN.exe
-      
+![alt tag]()
+
 Once you have created the folder structure and added all of the authors and their coresponding binaries the next step is to index them. With the new Author indexing window still open click on the 
 select folder button and select the parent directory (in this case AuthorsDirectory) where the author subdirectories are located. Next since we are indexing more than one author we must select the
 "Label Using Multiple Authors" radio button to use the folder names as author names. Finally click the index authors button at the bottom. What you will see are some terminal windows open up and the 
@@ -78,6 +70,12 @@ Function Labeling:
 In order to ensure that BinAuthor extracts,stores and computes features only belonging to an author our tool must identify only functions that were written by the author. Filtering functions based on if
 an author wrote them or not has a benefit of reducing false positives when storing and comparing author signatures. The side effects of the research to identify only functions written by an author are
 that we have also found ways to identify compiler functions and other functions that we deem as compiler helper functions since they are very short snipits of code (usually even a function with one
-line of code has a large code size at the assembly level). This means that when navigating the BinAuthor menu and selecting "Function Classification" we get to see the distrobution of User,Compiler and other
-functions. The function classification algorithm also colors the functions found under the function list in IDA Pro which allows a reverse engineer to only focus on user code and not compiler code. The color
-scheme is as follows: Green = User Functions, Dark Blue = Compiler Functions, Burgandy/Brown = Other functions (compiler helper functions).
+line of code has a large code size at the assembly level). This means that when navigating the BinAuthor menu and selecting "Function Classification" we get to see a graph with the distrobution of User,Compiler
+and other functions. The function classification algorithm also colors the functions found under the function list in IDA Pro which allows a reverse engineer to only focus on user code and not compiler code. The color
+scheme is as follows: Green = User Functions, Dark Blue = Compiler Functions, Burgandy/Brown = Other functions (compiler helper functions). Finally on the left hand side of the function classification
+pie chart graph we see a list of function classes. Clicking on any of these classes will show the functions that were identified to belong to the selected class. Double clicking on a function will bring you
+to a new window which shows the statistical features which are used to identify the class the currently selected function belongs to. The final graph labeled the "Function Correlation" graph is very useful
+in the event you believe a function has been missclassified. The function correlation will show you using statistical correlation which functions closely resemble the current function selected. The functions
+with strong correlation to the selected one will be shown and if those functions belong to a different function class then it is likely the selected function was improperly classified. This statistcal overview
+provides to an analyst fine grained information about how a given function is classified and can be used in the even that the analyst would like to fine tune the function classification algorithm.
+
