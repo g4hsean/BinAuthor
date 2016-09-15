@@ -433,7 +433,7 @@ class _Strings():
         output = {"Strings": self.allStrings}      
         output["FileName"] = self.fileName
         output["FileMD5"] = self.fileMD5
-        output["Author Name"] = self.authorName
+        output["Author Name"] = idc.ARGV[1]
         
         self.collection.insert(output)
         

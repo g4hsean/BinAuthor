@@ -15,7 +15,7 @@ def executeScripts(file):
     fileToAnalyze = file[0]
     AuthorName = file[1]
     
-    executionString = shlex.split('cmd.exe /c idaw.exe -S"' + choice1 + ' \\"'+ AuthorName + '\\"" ' + '"'+fileToAnalyze+'"')
+    executionString = shlex.split('cmd.exe /c idaw.exe -A -S"' + choice1 + ' \\"'+ AuthorName + '\\"" ' + '"'+fileToAnalyze+'"')
     call(executionString)
 
     
@@ -41,7 +41,7 @@ def main():
     
     if multiple == 1:
         for folder in onlyfolders:
-            folderName = folder.split("\\")[-1:][0]
+            folderName = os.path.basename(folder)
             onlyfiles = onlyfiles + [ [join(folder,f),folderName] for f in listdir(folder) if isfile(join(folder,f)) ]
     
     processPool = Pool(10)
