@@ -57,6 +57,7 @@ class Metrics(PluginForm):
         
         authorsList = self.choice1.distinct("Author Name")
         self.authors = {}
+        self.authorRanking = {}
         
         
         
@@ -83,7 +84,7 @@ class Metrics(PluginForm):
                 choice18stat = 0
             
             self.authors[result] = {"choice1": choice1stat,"choice2": choice2stat,"choice18": choice18stat,"strings": stringsstat}
-            
+            self.authorRanking[result] = (choice1stat + choice2stat + choice18stat + stringsstat)/4.0
 
         
     def OnCreate(self,form):
@@ -107,6 +108,7 @@ class Metrics(PluginForm):
         
         comboBoxes = self.wid.findChildren(QtGui.QComboBox)
         tableView = self.wid.findChildren(QtGui.QTableWidget,"tableWidget")[0]
+        authorTableView = self.wid.findChildren(QtGui.QTableWidget,"tableWidget_2")[0]
         for combo in comboBoxes:
             if "comboBox" in combo.objectName():
                 combo.insertItems(0,["1","5","10","15","50","100"])
@@ -133,8 +135,20 @@ class Metrics(PluginForm):
             if 'choice18' in self.authors[author].keys():
                 choice18Similarity = QtGui.QTableWidgetItem(str(self.authors[author]["choice18"]))
                 tableView.setItem(count,4,choice18Similarity)
-                
         
+        sortedAuthorMatches = sorted(self.authorRanking,key=self.authorRanking.get,reverse=True)
+        
+        
+        for author in sortedAuthorMatches:
+            count = authorTableView.rowCount()
+            authorTableView.insertRow(count)
+            authorName = QtGui.QTableWidgetItem(author)
+            authorTableView.setItem(count,0,authorName)
+            authorSimilarity = QtGui.QTableWidgetItem(str(self.authorRanking[author]*100))
+            authorTableView.setItem(count,1,authorSimilarity)
+            authorTableView.item(count,1).setBackground(self.returnColor(self.authorRanking[author]))
+            authorTableView.item(count,0).setBackground(self.returnColor(self.authorRanking[author]))
+            
         file.close()
         self.parent.setLayout(layout)
 
