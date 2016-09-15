@@ -154,4 +154,4 @@ class Metrics(PluginForm):
 
     def Show(self):
         """Creates the form is not created or focuses it if it was"""
-        return PluginForm.Show(self,"Metric View", options = PluginForm.FORM_PERSIST)
+        return PluginForm.Show(self,"Author Identification", options = PluginForm.FORM_PERSIST)
