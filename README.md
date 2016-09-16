@@ -26,6 +26,7 @@ To install the BinAuthor IDA Pro plugin you should follow the steps below:
         and follow the installation instructions. (note folder dialogs need only the root folder of both idapro and mongodb ie. IDA Pro 6.8 and MongoDB folders)
         Note: If no errors are encountered during the install process then proceed to step 5 otherwise contact the Binauthor
               Developer team.
+
 **Step 5:** Navigate to the Desktop and click on the BinAuthor_MongoDB_Start.bat file to start mongoDB
 
 **Step 6:** Load IDA Pro if there are no error dialogs about the plugin then everything is set up.
