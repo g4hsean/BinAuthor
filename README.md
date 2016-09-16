@@ -9,7 +9,9 @@ in conjunction with constructed features to match an author to an unknown binary
 ###Requirements:
 
 **OS:** windows (any version supported by IDA Pro 6.8 or higher) other operating systems coming soon
+
 **Python:** 2.7 64 bit version
+
 **MongoDB:** Any version with WiredTiger
 
 To install the BinAuthor IDA Pro plugin you should follow the steps below:
