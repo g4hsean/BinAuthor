@@ -84,7 +84,7 @@ class Metrics(PluginForm):
                 choice18stat = 0
             
             self.authors[result] = {"choice1": choice1stat,"choice2": choice2stat,"choice18": choice18stat,"strings": stringsstat}
-            self.authorRanking[result] = (choice1stat + choice2stat + choice18stat + stringsstat)/4.0
+            self.authorRanking[result] = (0.2*choice1stat + 0.15*choice2stat + 0.05*choice18stat + 0.6*stringsstat)
             
         #authorSum = 0
         #for author in self.authorRanking.keys():
