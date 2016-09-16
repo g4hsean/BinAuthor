@@ -31,10 +31,22 @@ class AuthorClassification():
         choice1 = choice1.getChoice1()
         features = choice1["features"]
         documents = self.choice1.find({"$or":[{"features.0":features[0]},{"features.1":features[1]},{"features.2":features[2]},{"features.3":features[3]},{"features.4":features[4]},{"features.5":features[5]},{"features.6":features[6]},{"features.7":features[7]},{"features.8":features[8]},{"features.9":features[9]},{"features.10":features[10]}]})
-
+        
+        authorDic = {}
         for doc in documents:
             jaccardCoefficient = len(list(set(doc["features"])& set(features)))/float(len(list(set(doc["features"])| set(features))))
-            self.choice1Results[doc['Author Name']] = jaccardCoefficient
+            if doc['Author Name'] not in authorDic.keys():
+                authorDic[doc['Author Name']] = 1
+            
+            authorDic[doc['Author Name']] +=1
+            
+            if doc['Author Name'] not in self.choice1Results.keys():
+                self.choice1Results[doc['Author Name']] = jaccardCoefficient
+            else:
+                self.choice1Results[doc['Author Name']] += jaccardCoefficient
+            
+        for author in authorDic.keys():
+            self.choice1Results[author] = self.choice1Results[author]/authorDic[author]
         return self.choice1Results
     
     def getChoice2(self):
@@ -48,10 +60,22 @@ class AuthorClassification():
         
         documents = self.choice2.find({"$or":[{'LibraryFunctions.cout': library['cout']},{'LibraryFunctions.puts':library['puts']},{'LibraryFunctions.clock': library['clock']},{'LibraryFunctions.endl': library['endl']},{'LibraryFunctions.exit': library['exit']},{'LibraryFunctions.fprintf':library['fprintf']},{'LibraryFunctions.printf':library['printf']},{'LibraryFunctions.cerr': library['cerr']},{'LibraryFunctions.fflush':library['fflush']},{'LibraryFunctions.Xlength_error': library['Xlength_error']},{"returns.retn":returns['retn']},{"returns.ret":returns["ret"]},{"calls":choice2["calls"]},{'printf without newline': choice2['printf without newline']},{'printf with newline': choice2['printf with newline']}]})
         
+        authorDic = {}
         for doc in documents:
             docFeatureVector = doc["LibraryFunctions"].values() + doc["returns"].values() + [doc["calls"],doc['printf without newline'],doc['printf with newline']] 
             jaccardCoefficient = len(list(set(docFeatureVector)& set(featureVector)))/float(len(list(set(docFeatureVector)| set(featureVector))))
-            self.choice2Results[doc['Author Name']] = jaccardCoefficient
+            if doc['Author Name'] not in authorDic.keys():
+                authorDic[doc['Author Name']] = 1
+            
+            authorDic[doc['Author Name']] +=1
+            
+            if doc['Author Name'] not in self.choice2Results.keys():
+                self.choice2Results[doc['Author Name']] = jaccardCoefficient
+            else:
+                self.choice2Results[doc['Author Name']] += jaccardCoefficient
+            
+        for author in authorDic.keys():
+            self.choice2Results[author] = self.choice2Results[author]/authorDic[author]
         return self.choice2Results
         
     def getChoice18(self):
