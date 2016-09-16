@@ -41,12 +41,12 @@ class AuthorClassification():
             authorDic[doc['Author Name']] +=1
             
             if doc['Author Name'] not in self.choice1Results.keys():
-                self.choice1Results[doc['Author Name']] = jaccardCoefficient
+                self.choice1Results[doc['Author Name']] = [jaccardCoefficient]
             else:
-                self.choice1Results[doc['Author Name']] += jaccardCoefficient
+                self.choice1Results[doc['Author Name']].append(jaccardCoefficient)
             
         for author in authorDic.keys():
-            self.choice1Results[author] = self.choice1Results[author]/authorDic[author]
+            self.choice1Results[author] = max(self.choice1Results[author])
         return self.choice1Results
     
     def getChoice2(self):
@@ -70,12 +70,12 @@ class AuthorClassification():
             authorDic[doc['Author Name']] +=1
             
             if doc['Author Name'] not in self.choice2Results.keys():
-                self.choice2Results[doc['Author Name']] = jaccardCoefficient
+                self.choice2Results[doc['Author Name']] = [jaccardCoefficient]
             else:
-                self.choice2Results[doc['Author Name']] += jaccardCoefficient
+                self.choice2Results[doc['Author Name']].append(jaccardCoefficient)
             
         for author in authorDic.keys():
-            self.choice2Results[author] = self.choice2Results[author]/authorDic[author]
+            self.choice2Results[author] = max(self.choice2Results[author])
         return self.choice2Results
         
     def getChoice18(self):
@@ -107,20 +107,35 @@ class AuthorClassification():
                         andList.append({"MinHashSignature."+str(counter):minhashTemp[counter]})
                     orQuery["$or"].append({"$and":andList})
                     start += HASHES_PER_BAND
-                #databaseQuery["$or"].append(orQuery)
+                
                 documents = self.choice18.find({"$and":[{"register":register},orQuery]})
 
                 for document in documents:
                     if document["Author Name"] not in candidateMatches.keys():
                         candidateMatches[document["Author Name"]] = []
                     candidateMatches[document["Author Name"]].append(minhash.similarity(minhashTemp,document["MinHashSignature"]))
+        
+        #for candidate in candidateMatches.keys():
+        #    self.choice18Results[candidate] = max(candidateMatches[candidate])
+        authorDic = {}
         for candidate in candidateMatches.keys():
             NumberOfValues = float(len(candidateMatches[candidate]))
             total = 0
             for similarityScore in candidateMatches[candidate]:
                 total += float(similarityScore)
-            self.choice18Results[candidate] = total/NumberOfValues
             
+            if candidate not in authorDic.keys():
+                authorDic[candidate] = 1
+            
+            authorDic[candidate] +=1
+            
+            if candidate not in self.choice18Results.keys():
+                self.choice18Results[candidate] = [total/NumberOfValues]
+            else:
+                self.choice18Results[candidate].append(total/NumberOfValues)
+        
+        for author in authorDic.keys():
+            self.choice18Results[author] = max(self.choice18Results[author])
         return self.choice18Results
         
     def getStringSimilarityScores(self):
