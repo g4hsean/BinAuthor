@@ -86,12 +86,12 @@ class Metrics(PluginForm):
             self.authors[result] = {"choice1": choice1stat,"choice2": choice2stat,"choice18": choice18stat,"strings": stringsstat}
             self.authorRanking[result] = (choice1stat + choice2stat + choice18stat + stringsstat)/4.0
             
-        authorSum = 0
-        for author in self.authorRanking.keys():
-            authorSum += self.authorRanking[author]
+        #authorSum = 0
+        #for author in self.authorRanking.keys():
+        #    authorSum += self.authorRanking[author]
             
-        for author in self.authorRanking.keys():
-            self.authorRanking[author] = self.authorRanking[author]/authorSum
+        #for author in self.authorRanking.keys():
+        #    self.authorRanking[author] = self.authorRanking[author]/authorSum
 
         
     def OnCreate(self,form):
