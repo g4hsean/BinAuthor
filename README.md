@@ -39,7 +39,7 @@ authors. To do this you open up IDA Pro and then click BinAuthor->Author Indexin
 this is the first time the tool is run, we would like to create our dataset to which we will use for identifying the authors of unknow binaries. To index more than one author you must create a parent 
 folder (AuthorsDirectory) with a subfolder structure like the one below:
 
-![alt tag]()
+![alt tag](https://github.com/g4hsean/BinAuthor/blob/master/FolderStructure.JPG)
 
 Once you have created the folder structure and added all of the authors and their coresponding binaries the next step is to index them. With the new Author indexing window still open click on the 
 select folder button and select the parent directory (in this case AuthorsDirectory) where the author subdirectories are located. Next since we are indexing more than one author we must select the
