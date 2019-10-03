@@ -6,7 +6,7 @@ in conjunction with constructed features to match an author to an unknown binary
 
 # Installation
 
-###Requirements:
+### Requirements:
 
 **OS:** windows (any version supported by IDA Pro 6.8 or higher) other operating systems coming soon
 
@@ -35,7 +35,7 @@ To install the BinAuthor IDA Pro plugin you should follow the steps below:
 
 # Basic Usage
 
-###Creation of Initial Author Database:
+### Creation of Initial Author Database:
 
 In order to obtain a list of potential authors of an unknow binary you must start with a training set. What this means is you must have a database filled with signatures of code created by known specific
 authors. To do this you open up IDA Pro and then click BinAuthor->Author Indexing and a new window opens. This new window allows you to choose to either index a single author or multiple authors. Since 
@@ -49,14 +49,14 @@ select folder button and select the parent directory (in this case AuthorsDirect
 "Label Using Multiple Authors" radio button to use the folder names as author names. Finally click the index authors button at the bottom. What you will see are some terminal windows open up and the 
 indexing will commence. Once the indexing has finished the terminal windows should close and you are back to the author indexing window of BinAuthor. Thats all there is to author indexing.
 
-###Capturing of Author Features From Binary:
+### Capturing of Author Features From Binary:
 
 To capture some or all of the features without using the author indexing portion of the plugin you can just choose to run any of the following menu items: Quality Features, Code Organization Features,
 Generalization Features or Variable Utilization Features. These menu items when combined are what the author indexing part of the plugin uses to store author features to database. The ability to select
 only certain features to index gives the analyst a high degree of control over what features they may find useful for their needs. Some analysts may find that using all features produces the best results
 whereas others may find it necessary to use only certain features to obtain excellent results.
 
-###Identifying The Author of An Unknown Binary:
+### Identifying The Author of An Unknown Binary:
 
 Now comes the part everyone has been waiting for, identifying the author of a binary we suspect to have a fingerprint for in our database. The prerequisties for this stage are that you have followed the
 "Creation of Initial Author Database" section of this manual and have an author fingerprint dataset to compare your unknown binary to. To identify the author of a binary open in IDA pro simply click on
@@ -68,7 +68,7 @@ for each author the higher the confidence scores will be. Generally the top 3 ca
 Identification Metrics table will show you which of the features are providing the best results for matching in the event you want to fine tune the plugin to focus more on one feature over another. It will
 also help an analyst see why the Authors in the Author Identification table were given such scores.
 
-###Function Labeling:
+### Function Labeling:
 
 In order to ensure that BinAuthor extracts,stores and computes features only belonging to an author our tool must identify only functions that were written by the author. Filtering functions based on if
 an author wrote them or not has a benefit of reducing false positives when storing and comparing author signatures. The side effects of the research to identify only functions written by an author are
